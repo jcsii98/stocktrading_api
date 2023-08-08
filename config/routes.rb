@@ -11,7 +11,10 @@ Rails.application.routes.draw do
     registrations: 'admins/registrations'
   }
   as :admin do
-    # Define routes for Admin within this block.
+  end
+
+  namespace :admin do
+    resources :users, only: [:index, :update]
   end
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
