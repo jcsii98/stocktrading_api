@@ -1,7 +1,6 @@
 Rails.application.routes.draw do
-  mount_devise_token_auth_for 'User', at: 'auth', controllers: {
-    registrations: 'users/registrations'
-  }
+
+  mount_devise_token_auth_for 'User', at: 'auth'
 
   get '/users_only', to: 'test#users_only'
 
@@ -9,11 +8,8 @@ Rails.application.routes.draw do
 
   get '/approved_users_only', to: 'test#approved_users_only'
   
-  mount_devise_token_auth_for 'Admin', at: 'admin_auth', controllers: {
-    registrations: 'admins/registrations'
-  }
-  as :admin do
-  end
+  mount_devise_token_auth_for 'Admin', at: 'admin_auth'
+
 
   namespace :admin do
     resources :users, only: [:index, :update] do

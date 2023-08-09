@@ -10,20 +10,20 @@ class Admins::RegistrationsController < Devise::RegistrationsController
   # end
 
   # POST /resource
-  def create
-    admin_params = sign_up_params
-    if admin_params[:password] != admin_params[:password_confirmation]
-      render json: { status: 'error', errors: "Password and password confirmation do not match" }, status: :unprocessable_entity
-    else
-      build_resource(admin_params)
-      if resource.save
-        yield resource if block_given?
-        render json: { status: 'success', data: resource }, status: :created
-      else 
-        render json: { status: 'error', errors: resource.errors.full_messages }, status: :unprocessable_entity
-      end
-    end
-  end
+  # def create
+  #   admin_params = sign_up_params
+  #   if admin_params[:password] != admin_params[:password_confirmation]
+  #     render json: { status: 'error', errors: "Password and password confirmation do not match" }, status: :unprocessable_entity
+  #   else
+  #     build_resource(admin_params)
+  #     if resource.save
+  #       yield resource if block_given?
+  #       render json: { status: 'success', data: resource }, status: :created
+  #     else 
+  #       render json: { status: 'error', errors: resource.errors.full_messages }, status: :unprocessable_entity
+  #     end
+  #   end
+  # end
 
   # GET /resource/edit
   # def edit

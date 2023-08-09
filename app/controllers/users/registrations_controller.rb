@@ -10,20 +10,21 @@ class Users::RegistrationsController < Devise::RegistrationsController
   # end
 
   # POST /resource
-  def create
-    user_params = sign_up_params
-    if user_params[:password] != user_params[:password_confirmation]
-      render json: { status: 'error', errors: "Password and password confirmation do not match" }, status: :unprocessable_entity
-    else
-      build_resource(user_params)
-      if resource.save
-        yield resource if block_given?
-        render json: { status: 'success', data: resource }, status: :created
-      else
-        render json: { status: 'error', errors: resource.errors.full_messages }, status: :unprocessable_entity
-      end
-    end
-  end
+  # def create
+  #   user_params = sign_up_params
+  #   if user_params[:password] != user_params[:password_confirmation]
+  #     render json: { status: 'error', errors: "Password and password confirmation do not match" }, status: :unprocessable_entity
+  #   else
+  #     build_resource(user_params)
+  #     if resource.save
+  #       yield resource if block_given?
+  #       puts ActionMailer::Base.deliveries.inspect
+  #       render json: { status: 'success', data: resource }, status: :created
+  #     else
+  #       render json: { status: 'error', errors: resource.errors.full_messages }, status: :unprocessable_entity
+  #     end
+  #   end
+  # end
 
   # GET /resource/edit
   # def edit
@@ -73,7 +74,7 @@ class Users::RegistrationsController < Devise::RegistrationsController
 
   private
 
-  def sign_up_params
-    params.require(:user).permit(:email, :password, :password_confirmation, :full_name, :user_name)
-  end
+  # def sign_up_params
+  #   params.require(:user).permit(:email, :password, :password_confirmation, :full_name, :user_name)
+  # end
 end
