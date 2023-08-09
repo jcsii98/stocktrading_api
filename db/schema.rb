@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_08_09_081256) do
+ActiveRecord::Schema[7.0].define(version: 2023_08_09_133219) do
   create_table "admins", force: :cascade do |t|
     t.string "provider", default: "email", null: false
     t.string "uid", default: "", null: false
@@ -52,7 +52,13 @@ ActiveRecord::Schema[7.0].define(version: 2023_08_09_081256) do
     t.integer "user_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.decimal "total_amount", precision: 10, scale: 2, null: false
     t.index ["user_id"], name: "index_portfolios_on_user_id"
+  end
+
+  create_table "stocks", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "users", force: :cascade do |t|

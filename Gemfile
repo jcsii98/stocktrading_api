@@ -52,5 +52,6 @@ end
 
 gem 'devise_token_auth'
 gem 'devise'
+gem 'rest-client'
 
 gem 'rack-cors', :require => 'rack/cors'

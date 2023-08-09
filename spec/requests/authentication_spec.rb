@@ -17,7 +17,7 @@ RSpec.describe 'Authentication', type: :request do
 
       confirmation_email = Devise::Mailer.deliveries.last
       expect(confirmation_email).not_to be_nil
-      expect(confirmation_email.subject).to eq('Confirmation instructions')
+      expect(confirmation_email.subject).to eq('Email Confirmation')
     end
 
     it 'returns an error if password confirmation does not match' do
