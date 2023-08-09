@@ -7,6 +7,8 @@ Rails.application.routes.draw do
 
   get '/admins_only', to: 'test#admins_only'
 
+  get '/approved_users_only', to: 'test#approved_users_only'
+  
   mount_devise_token_auth_for 'Admin', at: 'admin_auth', controllers: {
     registrations: 'admins/registrations'
   }
@@ -14,7 +16,14 @@ Rails.application.routes.draw do
   end
 
   namespace :admin do
-    resources :users, only: [:index, :update]
+    resources :users, only: [:index, :update] do
+      collection do
+        get :pending_accounts
+      end
+      member do
+        get :show_pending_account
+      end
+    end
   end
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 

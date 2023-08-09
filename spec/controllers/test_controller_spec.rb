@@ -73,4 +73,53 @@ RSpec.describe TestController, type: :controller do
       end
     end
   end
+
+  describe 'GET #approved_users_only' do
+    context 'when user is not authenticated' do
+      it 'returns unauthorized' do
+
+        get :approved_users_only
+
+        expect(response).to have_http_status(:unauthorized)
+
+        response_json = JSON.parse(response.body)
+
+        expect(response_json['errors']).to include('You need to sign in or sign up before continuing.')
+      end
+    end
+
+    context 'when user is authenticated only' do
+      it 'returns user is pending approval' do
+        user = create(:user)
+        auth_headers = user.create_new_auth_token
+        request.headers.merge!(auth_headers)
+
+        get :approved_users_only
+
+        expect(response).to have_http_status(:unprocessable_entity)
+
+        response_json = JSON.parse(response.body)
+
+        expect(response_json['data']['message']).to eq("User is pending approval")
+      end
+    end
+    
+    context 'when user is authenticated and approved' do
+      it 'returns welcome' do
+      user = create(:user, account_pending: false)
+      auth_headers = user.create_new_auth_token
+      request.headers.merge!(auth_headers)
+
+      get :approved_users_only
+      
+      expect(response).to have_http_status(200)
+
+      response_json = JSON.parse(response.body)
+
+      expect(response_json['data']['message']).to eq("Welcome #{user.full_name}")
+      end
+    end
+
+  end
+
 end
