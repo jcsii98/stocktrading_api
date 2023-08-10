@@ -1,10 +1,17 @@
 class PortfoliosController < ApplicationController
-    before_action :authenticate_user!
+    before_action :authenticate_user!, only: [:create, :destroy]
     before_action :verify_approved, only: [:controlleractionhere]
     before_action :set_portfolio, only: [:show, :update, :destroy]
 
     def index
-        @portfolios = current_user.portfolios
+            @portfolios = current_user.portfolios
+            render json: { data: @portfolios }
+    end
+
+    def index_by_stock
+        stock_id = params[:stock_id]
+        @portfolios = Portfolio.where(stock_id: stock_id)
+
         render json: { data: @portfolios }
     end
 
@@ -28,9 +35,9 @@ class PortfoliosController < ApplicationController
     end
 
     def show
-
+        render json: @portfolio
     end
-    
+
     def update
     
     end

@@ -22,14 +22,15 @@ class StocksController < ApplicationController
 
         stock_details = fetch_stock_details_from_api(stock_id)
 
-        render json: stock_details[:usd]
+        render json: stock_details
     end
 
 
     private
 
     def fetch_stock_details_from_api(stock_id)
-        response = RestClient.get 'https://api.coingecko.com/api/v3/coins/01coin?tickers=false&market_data=true&community_data=false&developer_data=false&sparkline=false' 
+        api_url = "https://api.coingecko.com/api/v3/coins/#{stock_id}?tickers=false&market_data=true&community_data=false&developer_data=false&sparkline=false"
+        response = RestClient.get(api_url)
         json_response = JSON.parse(response.body)
 
         stock_details = {

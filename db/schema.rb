@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_08_10_092324) do
+ActiveRecord::Schema[7.0].define(version: 2023_08_10_115930) do
   create_table "admins", force: :cascade do |t|
     t.string "provider", default: "email", null: false
     t.string "uid", default: "", null: false
@@ -57,8 +57,21 @@ ActiveRecord::Schema[7.0].define(version: 2023_08_10_092324) do
   end
 
   create_table "stocks", force: :cascade do |t|
+    t.string "stock_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "transactions", force: :cascade do |t|
+    t.integer "buyer_portfolio_id"
+    t.integer "seller_portfolio_id"
+    t.string "stock_id"
+    t.decimal "quantity"
+    t.decimal "amount"
+    t.string "status"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.decimal "price", precision: 10, scale: 8
   end
 
   create_table "users", force: :cascade do |t|
@@ -90,4 +103,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_08_10_092324) do
   add_foreign_key "admins_users", "admins"
   add_foreign_key "admins_users", "users"
   add_foreign_key "portfolios", "users"
+  add_foreign_key "transactions", "portfolios", column: "buyer_portfolio_id"
+  add_foreign_key "transactions", "portfolios", column: "seller_portfolio_id"
 end

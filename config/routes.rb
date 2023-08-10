@@ -27,9 +27,15 @@ Rails.application.routes.draw do
   # root "articles#index"
 
   get '/portfolios', to: 'portfolios#index'
+  get 'portfolios/by_stock/:stock_id', to: 'portfolios#index_by_stock'
+  
   post '/portfolios', to: 'portfolios#create'
 
   delete 'portfolios/:id', to: 'portfolios#destroy'
+
+  resources :portfolios do
+    resources :transactions, only: [:index, :create]
+  end
 
   get '/stocks/available_stocks', to: 'stocks#available_stocks'
 
