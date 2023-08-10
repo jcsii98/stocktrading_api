@@ -1,13 +1,46 @@
 require 'rest-client'
 
 class StocksController < ApplicationController
+    before_action :authenticate_user!
+
     def available_stocks
         available_stocks = fetch_available_stocks_from_api
 
         render json: available_stocks
+        # response structure:
+        # [
+        #     {
+        #         "id": "01coin",
+        #         "name": "01coin",
+        #         "symbol": "zoc"
+        #     }
+        # ]
     end
 
+    def stock_details
+        stock_id = params[:id]
+
+        stock_details = fetch_stock_details_from_api(stock_id)
+
+        render json: stock_details[:usd]
+    end
+
+
     private
+
+    def fetch_stock_details_from_api(stock_id)
+        response = RestClient.get 'https://api.coingecko.com/api/v3/coins/01coin?tickers=false&market_data=true&community_data=false&developer_data=false&sparkline=false' 
+        json_response = JSON.parse(response.body)
+
+        stock_details = {
+            id: json_response['id'],
+            name: json_response['name'],
+            symbol: json_response['symbol'],
+            usd: json_response['market_data']['current_price']['usd']
+        }
+
+        return stock_details
+    end
 
     def fetch_available_stocks_from_api
         response = RestClient.get 'https://api.coingecko.com/api/v3/coins/list'
