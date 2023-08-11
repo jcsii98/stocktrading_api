@@ -36,15 +36,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_08_10_115930) do
     t.index ["uid", "provider"], name: "index_admins_on_uid_and_provider", unique: true
   end
 
-  create_table "admins_users", force: :cascade do |t|
-    t.integer "admin_id", null: false
-    t.integer "user_id", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["admin_id"], name: "index_admins_users_on_admin_id"
-    t.index ["user_id"], name: "index_admins_users_on_user_id"
-  end
-
   create_table "portfolios", force: :cascade do |t|
     t.string "stock_id"
     t.integer "quantity"
@@ -100,8 +91,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_08_10_115930) do
     t.index ["uid", "provider"], name: "index_users_on_uid_and_provider", unique: true
   end
 
-  add_foreign_key "admins_users", "admins"
-  add_foreign_key "admins_users", "users"
   add_foreign_key "portfolios", "users"
   add_foreign_key "transactions", "portfolios", column: "buyer_portfolio_id"
   add_foreign_key "transactions", "portfolios", column: "seller_portfolio_id"

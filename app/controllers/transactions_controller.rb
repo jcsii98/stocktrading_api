@@ -1,6 +1,7 @@
 class TransactionsController < ApplicationController
     before_action :authenticate_user!
     before_action :authorize_access, only: [:index]
+    
     def index
         portfolio = Portfolio.find(params[:portfolio_id])
         buyer_transactions = portfolio.buyer_transactions
