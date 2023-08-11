@@ -7,8 +7,9 @@ class Portfolio < ApplicationRecord
   
   
   def positive_quantity
-    if quantity.blank?
+    if quantity.blank? || quantity.to_f <= 0
         errors.add(:quantity, "must be a positive number")
     end
   end
+  
 end
