@@ -26,9 +26,24 @@ class PortfoliosController < ApplicationController
     def create
         @portfolio = current_user.portfolios.build(portfolio_params)
 
+        available_stocks = verify_available_stock(@portfolio.stock_id)
+        matching_stock = available_stocks.find { |stock| stock[:id] == @portfolio.stock_id }
+
+        if matching_stock.nil?
+            render json: { status: 'error', message: 'Invalid stock_id' }, status: :unprocessable_entity
+            return
+        end
+
         fetched_price = fetch_price_from_api(@portfolio.stock_id)
 
+        if fetched_price.nil?
+            render json: { status: 'error', message: 'Price cannot be fetched' }, status: :unprocessable_entity
+            return
+        end
+
         @portfolio.price = fetched_price
+
+        @portfolio.quantity ||= 0
 
         total_amount = @portfolio.price * @portfolio.quantity
 
@@ -67,10 +82,16 @@ class PortfoliosController < ApplicationController
     end
 
 
-
-
-
     private
+
+    def verify_available_stock(stock_id)
+        response = RestClient.get 'https://api.coingecko.com/api/v3/coins/list'
+        json_response = JSON.parse(response.body)
+        
+        # Extract relevant data from the JSON response, for example:
+        available_stocks = json_response.map { |stock| { id: stock['id'], name: stock['name'], symbol: stock['symbol'] } }
+        return available_stocks
+    end
     
     def fetch_price_from_api(stock_id)
         response = RestClient.get 'https://api.coingecko.com/api/v3/coins/01coin?tickers=false&market_data=true&community_data=false&developer_data=false&sparkline=false' 

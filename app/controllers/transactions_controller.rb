@@ -1,5 +1,4 @@
 class TransactionsController < ApplicationController
-    before_action :authenticate_user!
     before_action :authorize_access, only: [:index]
     
     def index
@@ -8,6 +7,12 @@ class TransactionsController < ApplicationController
         seller_transactions = portfolio.seller_transactions
 
         render json: { status: 'success', buyer_transactions: buyer_transactions, seller_transactions: seller_transactions }, status: :ok
+    end
+
+    def show
+      transaction = Transaction.find(params[:id])
+
+      render json: { status: 'success', data: transaction }, status: :ok
     end
 
     def create
@@ -21,7 +26,7 @@ class TransactionsController < ApplicationController
     stock_price = fetch_stock_price_from_api(transaction_stock_id)
 
     price = stock_price[:usd]
-    amount = quantity * price
+    amount = quantity.to_f * price.to_f
 
     transaction = Transaction.new(
       buyer_portfolio: buyer_portfolio,
@@ -40,6 +45,21 @@ class TransactionsController < ApplicationController
     end
   end
 
+  def approve_transaction
+    begin
+      portfolio = current_user.portfolios.find(params[:portfolio_id])
+      transaction = portfolio.seller_transactions.find(params[:id])
+
+      if transaction.update(status: 'approved')
+        render json: { status: 'success', message: 'Transaction approved successfully' }, status: :ok
+      else
+        render json: { status: 'error', message: transaction.errors.full_messages }, status: :unprocessable_entity
+      end
+    rescue ActiveRecord::RecordNotFound
+      render json: { status: 'error', message: 'Transaction not found or unauthorized' }, status: :not_found
+    end
+  end
+
   private
 
   def fetch_stock_price_from_api(stock_id)
@@ -54,8 +74,9 @@ class TransactionsController < ApplicationController
   end
   
   def authorize_access
-    authorize_portfolio_owner || authenticate_admin!
+    authorize_portfolio_owner
   end
+  
   def authorize_portfolio_owner
     portfolio = Portfolio.find(params[:portfolio_id])
     unless portfolio.user == current_user

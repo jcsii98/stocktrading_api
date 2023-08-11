@@ -33,7 +33,11 @@ Rails.application.routes.draw do
   delete 'portfolios/:id', to: 'portfolios#destroy'
 
   resources :portfolios do
-    resources :transactions, only: [:index, :create]
+    resources :transactions, only: [:index, :create, :show] do
+      member do
+        patch 'approve_transaction'
+      end
+    end
   end
 
   get '/stocks/available_stocks', to: 'stocks#available_stocks'
