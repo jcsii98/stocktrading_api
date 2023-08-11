@@ -1,8 +1,9 @@
 class PortfoliosController < ApplicationController
     before_action :authenticate_user!, only: [:create, :destroy]
     before_action :verify_approved, only: [:create, :destroy, :update]
-    before_action :set_portfolio, only: [:show, :update, :destroy]
+    before_action :set_portfolio, only: [:update, :destroy]
     before_action :authenticate_admin!, only: [:index_by_user]
+    before_action :authorize_access, only: [:update]
 
     def index
             @portfolios = current_user.portfolios
@@ -58,7 +59,11 @@ class PortfoliosController < ApplicationController
     end
 
     def show
-        render json: @portfolio
+        portfolio = Portfolio.find(params[:id])
+
+        render json: { status: 'success', data: portfolio }, status: :ok
+        rescue ActiveRecord::RecordNotFound
+        render json: { status: 'error', message: 'Portfolio not found' }, status: :not_found
     end
 
     def update
@@ -121,6 +126,19 @@ class PortfoliosController < ApplicationController
 
     def portfolio_params
         params.require(:portfolio).permit(:stock_id, :quantity)
+    end
+
+    def authorize_access
+        authorize_portfolio_owner
+    end
+
+    def authorize_portfolio_owner
+        portfolio = Portfolio.find(params[:id])
+        unless portfolio.user == current_user
+            render json: { status: 'error', message: 'You are not authorized to access this resource.'}, status: :forbidden
+        end
+        rescue ActiveRecord::RecordNotFound
+            render json: { status: 'error', message: 'Portfolio not found.' }, status: :not_found
     end
 
 end

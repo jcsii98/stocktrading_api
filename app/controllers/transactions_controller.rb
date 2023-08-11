@@ -27,6 +27,11 @@ class TransactionsController < ApplicationController
 
     price = stock_price[:usd]
     amount = quantity.to_f * price.to_f
+    
+    if quantity.to_f > seller_portfolio.quantity
+      render json: { status: 'error', message: 'Insufficient portfolio quantity for the transaction' }, status: :unprocessable_entity
+      return
+    end
 
     transaction = Transaction.new(
       buyer_portfolio: buyer_portfolio,
@@ -49,8 +54,19 @@ class TransactionsController < ApplicationController
     begin
       portfolio = current_user.portfolios.find(params[:portfolio_id])
       transaction = portfolio.seller_transactions.find(params[:id])
+    
+      if transaction.status == 'approved'
+        render json: { status: 'error', message: 'Transaction is already approved' }, status: :unprocessable_entity
+      elsif transaction.update(status: 'approved')
+        updated_quantity = portfolio.quantity - transaction.quantity
+        
+        stock_price = fetch_stock_price_from_api(transaction.stock_id)
+        updated_price = stock_price[:usd]
 
-      if transaction.update(status: 'approved')
+        updated_total_amount = updated_quantity.to_f * updated_price.to_f
+        portfolio.update(quantity: updated_quantity, price: updated_price, total_amount: updated_total_amount )
+
+
         render json: { status: 'success', message: 'Transaction approved successfully' }, status: :ok
       else
         render json: { status: 'error', message: transaction.errors.full_messages }, status: :unprocessable_entity
