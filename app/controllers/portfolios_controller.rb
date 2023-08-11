@@ -1,7 +1,8 @@
 class PortfoliosController < ApplicationController
     before_action :authenticate_user!, only: [:create, :destroy]
-    before_action :verify_approved, only: [:controlleractionhere]
+    before_action :verify_approved, only: [:create, :destroy, :update]
     before_action :set_portfolio, only: [:show, :update, :destroy]
+    # before_action :authenticate_admin!, only: [:index_by_user]
 
     def index
             @portfolios = current_user.portfolios
@@ -11,6 +12,13 @@ class PortfoliosController < ApplicationController
     def index_by_stock
         stock_id = params[:stock_id]
         @portfolios = Portfolio.where(stock_id: stock_id)
+
+        render json: { data: @portfolios }
+    end
+
+    def index_by_user
+        user_id = params[:user_id]
+        @portfolios = Portfolio.where(user_id: user_id)
 
         render json: { data: @portfolios }
     end
@@ -39,7 +47,15 @@ class PortfoliosController < ApplicationController
     end
 
     def update
-    
+        if @portfolio.update(portfolio_params)
+            # Calculate total_amount based on the updated quantity and price
+            @portfolio.total_amount = @portfolio.price * @portfolio.quantity
+            @portfolio.save
+
+            render json: { status: 'success', data: @portfolio }
+        else
+            render json: { status: 'error', errors: @portfolio.errors.full_messages }, status: :unprocessable_entity
+        end
     end
 
     def destroy

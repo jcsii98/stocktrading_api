@@ -51,4 +51,5 @@ class StocksController < ApplicationController
         available_stocks = json_response.map { |stock| { id: stock['id'], name: stock['name'], symbol: stock['symbol'] } }
         return available_stocks
     end
+    
 end

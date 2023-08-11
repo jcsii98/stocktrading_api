@@ -26,6 +26,7 @@ Rails.application.routes.draw do
   # Defines the root path route ("/")
   # root "articles#index"
 
+  get '/portfolios/by_user/:user_id', to: 'portfolios#index_by_user'
   get '/portfolios', to: 'portfolios#index'
   get 'portfolios/by_stock/:stock_id', to: 'portfolios#index_by_stock'
   

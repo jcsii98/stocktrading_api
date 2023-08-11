@@ -1,6 +1,6 @@
 class TransactionsController < ApplicationController
-
-
+    before_action :authenticate_user!
+    before_action :authorize_access, only: [:index]
     def index
         portfolio = Portfolio.find(params[:portfolio_id])
         buyer_transactions = portfolio.buyer_transactions
@@ -51,4 +51,18 @@ class TransactionsController < ApplicationController
 
     return stock_price
   end
+  
+  def authorize_access
+    authorize_portfolio_owner || authenticate_admin!
+  end
+  def authorize_portfolio_owner
+    portfolio = Portfolio.find(params[:portfolio_id])
+    unless portfolio.user == current_user
+        render json: { status: 'error', message: 'You are not authorized to access this resource.'}, status: :forbidden
+    end
+    rescue ActiveRecord::RecordNotFound
+        render json: { status: 'error', message: 'Portfolio not found.' }, status: :not_found
+  end
+
+
 end
