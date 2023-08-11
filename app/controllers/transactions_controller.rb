@@ -22,6 +22,11 @@ class TransactionsController < ApplicationController
     puts "Transaction Stock ID Before: #{transaction_stock_id}"
     buyer_portfolio = current_user.portfolios.find_by(stock_id: transaction_stock_id)
 
+    if buyer_portfolio.nil?
+      render json: { status: 'error', message: "Portfolio with stock_id '#{transaction_stock_id}' must exist for the current user" }, status: :unprocessable_entity
+      return
+    end
+
     quantity = params[:quantity]
     stock_price = fetch_stock_price_from_api(transaction_stock_id)
 
@@ -54,20 +59,30 @@ class TransactionsController < ApplicationController
     begin
       portfolio = current_user.portfolios.find(params[:portfolio_id])
       transaction = portfolio.seller_transactions.find(params[:id])
-    
+
       if transaction.status == 'approved'
         render json: { status: 'error', message: 'Transaction is already approved' }, status: :unprocessable_entity
-      elsif transaction.update(status: 'approved')
-        updated_quantity = portfolio.quantity - transaction.quantity
-        
+        return
+      end
+
+      buyer_portfolio = transaction.buyer_portfolio
+
+      if transaction.update(status: 'approved')
+        updated_seller_quantity = portfolio.quantity - transaction.quantity
+        updated_buyer_quantity = buyer_portfolio.quantity + transaction.quantity
+
+
         stock_price = fetch_stock_price_from_api(transaction.stock_id)
         updated_price = stock_price[:usd]
 
-        updated_total_amount = updated_quantity.to_f * updated_price.to_f
-        portfolio.update(quantity: updated_quantity, price: updated_price, total_amount: updated_total_amount )
+        updated_seller_amount = updated_seller_quantity.to_f * updated_price.to_f
+        updated_buyer_amount = updated_buyer_quantity.to_f * updated_price.to_f
+        
+        portfolio.update(quantity: updated_seller_quantity, price: updated_price, total_amount: updated_seller_amount)
+        
+        buyer_portfolio.update(quantity: updated_buyer_quantity, price: updated_price, total_amount: updated_buyer_amount)
 
-
-        render json: { status: 'success', message: 'Transaction approved successfully' }, status: :ok
+        render json: { status: 'success', message: 'Transaction approved successfully', seller: portfolio, buyer: buyer_portfolio }, status: :ok
       else
         render json: { status: 'error', message: transaction.errors.full_messages }, status: :unprocessable_entity
       end
