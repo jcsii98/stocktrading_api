@@ -7,14 +7,23 @@ class PortfoliosController < ApplicationController
 
     def index
             @portfolios = current_user.portfolios
+
+            if @portfolios.empty?
+                render json: { message: 'No portfolios found for current_user' }
+            else
             render json: { data: @portfolios }
+            end
     end
 
     def index_by_stock
         stock_id = params[:stock_id]
         @portfolios = Portfolio.where(stock_id: stock_id)
 
+        if @portfolios.empty?
+            render json: { status: 'error', message: 'No portfolios found for the specified stock_id' }, status: :unprocessable_entity
+        else
         render json: { data: @portfolios }
+        end
     end
 
     def index_by_user
@@ -26,6 +35,7 @@ class PortfoliosController < ApplicationController
 
     def create
         @portfolio = current_user.portfolios.build(portfolio_params)
+
 
         available_stocks = verify_available_stock(@portfolio.stock_id)
         matching_stock = available_stocks.find { |stock| stock[:id] == @portfolio.stock_id }
@@ -42,7 +52,7 @@ class PortfoliosController < ApplicationController
             return
         end
 
-        @portfolio.price = fetched_price
+        @portfolio.price = fetched_price.to_d
 
         @portfolio.quantity ||= 0
 

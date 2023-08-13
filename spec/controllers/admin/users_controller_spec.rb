@@ -47,7 +47,6 @@ RSpec.describe Admin::UsersController, type: :controller do
     end
   end
 
-  # Write similar tests for other actions
 end
 
 RSpec.describe "Admin::Users", type: :request do

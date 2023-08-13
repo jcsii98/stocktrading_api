@@ -7,8 +7,9 @@ class Portfolio < ApplicationRecord
   
   
   def positive_quantity
-    if quantity.blank? || quantity.to_f <= 0
-        errors.add(:quantity, "must be a positive number")
+    if quantity.blank? || quantity.to_f < 0
+      errors.add(:quantity, "must be a positive number")
+      Rails.logger.debug("Validation failed: quantity=#{quantity}")
     end
   end
   

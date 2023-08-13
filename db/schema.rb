@@ -38,17 +38,20 @@ ActiveRecord::Schema[7.0].define(version: 2023_08_10_115930) do
 
   create_table "portfolios", force: :cascade do |t|
     t.string "stock_id"
-    t.integer "quantity"
-    t.decimal "price", precision: 10, scale: 8
+    t.decimal "quantity", precision: 15, scale: 10
+    t.decimal "price", precision: 15, scale: 10
     t.integer "user_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.decimal "total_amount", precision: 10, scale: 2, default: "0.0", null: false
+    t.decimal "total_amount", precision: 15, scale: 10, default: "0.0", null: false
     t.index ["user_id"], name: "index_portfolios_on_user_id"
   end
 
   create_table "stocks", force: :cascade do |t|
     t.string "stock_id"
+    t.decimal "price", precision: 15, scale: 10
+    t.decimal "quantity", precision: 15, scale: 10
+    t.decimal "total_amount", precision: 15, scale: 10
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
@@ -57,12 +60,12 @@ ActiveRecord::Schema[7.0].define(version: 2023_08_10_115930) do
     t.integer "buyer_portfolio_id"
     t.integer "seller_portfolio_id"
     t.string "stock_id"
-    t.decimal "quantity"
-    t.decimal "amount"
+    t.decimal "quantity", precision: 15, scale: 10
+    t.decimal "amount", precision: 15, scale: 10
     t.string "status"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.decimal "price", precision: 10, scale: 8
+    t.decimal "price", precision: 15, scale: 10
   end
 
   create_table "users", force: :cascade do |t|
