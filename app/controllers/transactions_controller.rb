@@ -1,5 +1,6 @@
 class TransactionsController < ApplicationController
-    before_action :authorize_access, only: [:index]
+    before_action :authorize_access, only: [:index, :show]
+    before_action :authenticate_user!, only: [:create]
     
     def index
         portfolio = Portfolio.find(params[:portfolio_id])
@@ -39,8 +40,8 @@ class TransactionsController < ApplicationController
     end
 
     transaction = Transaction.new(
-      buyer_portfolio: buyer_portfolio,
-      seller_portfolio: seller_portfolio,
+      buyer_portfolio_id: buyer_portfolio,
+      seller_portfolio_id: seller_portfolio,
       amount: amount,
       price: price,
       quantity: quantity,
