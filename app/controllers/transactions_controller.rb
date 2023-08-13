@@ -40,8 +40,8 @@ class TransactionsController < ApplicationController
     end
 
     transaction = Transaction.new(
-      buyer_portfolio_id: buyer_portfolio,
-      seller_portfolio_id: seller_portfolio,
+      buyer_portfolio_id: buyer_portfolio.id,
+      seller_portfolio_id: seller_portfolio.id,
       amount: amount,
       price: price,
       quantity: quantity,
