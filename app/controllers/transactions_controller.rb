@@ -17,80 +17,49 @@ class TransactionsController < ApplicationController
     end
 
     def create
-    seller_portfolio = Portfolio.find(params[:portfolio_id])
-    puts "Seller Portfolio: #{seller_portfolio.inspect}"
-    transaction_stock_id = seller_portfolio.stock_id
-    puts "Transaction Stock ID Before: #{transaction_stock_id}"
-    buyer_portfolio = current_user.portfolios.find_by(stock_id: transaction_stock_id)
+      transaction_data = Transaction.create_transaction(current_user, params[:portfolio_id], params[:quantity])
 
-    if buyer_portfolio.nil?
-      render json: { status: 'error', message: "Portfolio with stock_id '#{transaction_stock_id}' must exist for the current user" }, status: :unprocessable_entity
-      return
-    end
+      if transaction_data[:success]
+        transaction = Transaction.new(
+          buyer_portfolio_id: transaction_data[:buyer_portfolio].id,
+          seller_portfolio_id: transaction_data[:seller_portfolio].id,
+          amount: transaction_data[:amount],
+          price: transaction_data[:price],
+          quantity: params[:quantity],
+          status: 'pending',
+          stock_id: transaction_data[:transaction_stock_id]
+        )
 
-    quantity = params[:quantity]
-    stock_price = fetch_stock_price_from_api(transaction_stock_id)
-
-    price = stock_price[:usd]
-    amount = quantity.to_f * price.to_f
-    
-    if quantity.to_f > seller_portfolio.quantity
-      render json: { status: 'error', message: 'Insufficient portfolio quantity for the transaction' }, status: :unprocessable_entity
-      return
-    end
-
-    transaction = Transaction.new(
-      buyer_portfolio_id: buyer_portfolio.id,
-      seller_portfolio_id: seller_portfolio.id,
-      amount: amount,
-      price: price,
-      quantity: quantity,
-      status: 'pending',
-      stock_id: transaction_stock_id
-    )
-
-    if transaction.save
-      render json: { status: 'success', data: transaction }, status: :created
-    else
-      render json: { status: 'error', errors: transaction.errors.full_messages }, status: :unprocessable_entity
-    end
-  end
-
-  def approve_transaction
-    begin
-      portfolio = current_user.portfolios.find(params[:portfolio_id])
-      transaction = portfolio.seller_transactions.find(params[:id])
-
-      if transaction.status == 'approved'
-        render json: { status: 'error', message: 'Transaction is already approved' }, status: :unprocessable_entity
-        return
-      end
-
-      buyer_portfolio = transaction.buyer_portfolio
-
-      if transaction.update(status: 'approved')
-        updated_seller_quantity = portfolio.quantity - transaction.quantity
-        updated_buyer_quantity = buyer_portfolio.quantity + transaction.quantity
-
-
-        stock_price = fetch_stock_price_from_api(transaction.stock_id)
-        updated_price = stock_price[:usd]
-
-        updated_seller_amount = updated_seller_quantity.to_f * updated_price.to_f
-        updated_buyer_amount = updated_buyer_quantity.to_f * updated_price.to_f
-        
-        portfolio.update(quantity: updated_seller_quantity, price: updated_price, total_amount: updated_seller_amount)
-        
-        buyer_portfolio.update(quantity: updated_buyer_quantity, price: updated_price, total_amount: updated_buyer_amount)
-
-        render json: { status: 'success', message: 'Transaction approved successfully', seller: portfolio, buyer: buyer_portfolio }, status: :ok
+        if transaction.save
+          render json: { status: 'success', data: transaction }, status: :created
+        else
+          render json: { status: 'error', errors: transaction.errors.full_messages }, status: :unprocessable_entity
+        end
       else
-        render json: { status: 'error', message: transaction.errors.full_messages }, status: :unprocessable_entity
+        render json: { status: 'error', message: transaction_data[:message] }, status: :unprocessable_entity
       end
-    rescue ActiveRecord::RecordNotFound
-      render json: { status: 'error', message: 'Transaction not found or unauthorized' }, status: :not_found
     end
-  end
+
+    def update
+      begin
+        portfolio = current_user.portfolios.find(params[:portfolio_id])
+        transaction = portfolio.seller_transactions.find(params[:id])
+        
+        if transaction.status == 'approved'
+          render json: { status: 'error', message: 'Transaction is already approved' }, status: :unprocessable_entity
+          return
+        end
+
+        if transaction.update(status: 'approved')
+
+          render json: { status: 'success', message: 'Transaction approved successfully' }, status: :ok
+        else
+          render json: { status: 'error', message: transaction.errors.full_messages }, status: :unprocessable_entity
+        end
+      rescue ActiveRecord::RecordNotFound
+        render json: { status: 'error', message: 'Transaction not found or unauthorized' }, status: :not_found
+      end
+    end
 
   private
 

@@ -13,4 +13,39 @@ class Portfolio < ApplicationRecord
     end
   end
   
+  def update_portfolios_after_transaction(transaction)
+    buyer_portfolio = transaction.buyer_portfolio
+    Rails.logger.debug("Updating portfolios after transaction #{transaction.id} with quantity: #{transaction.quantity}")
+    Rails.logger.debug("seller quantity before #{quantity}")
+    new_seller_quantity = quantity - transaction.quantity
+    Rails.logger.debug("seller quantity after #{new_seller_quantity}")
+    Rails.logger.debug("buyer quantity before #{buyer_portfolio.quantity}")
+    new_buyer_quantity = buyer_portfolio.quantity + transaction.quantity
+    Rails.logger.debug("buyer quantity after #{new_buyer_quantity}")
+    
+    stock_price = fetch_stock_price_from_api(transaction.stock_id)
+    new_price = stock_price[:usd]
+
+    new_seller_amount = new_seller_quantity.to_f * new_price.to_f
+    new_buyer_amount = new_buyer_quantity.to_f * new_price.to_f
+
+    update(quantity: new_seller_quantity, price: new_price, total_amount: new_seller_amount)
+    buyer_portfolio.update(quantity: new_buyer_quantity, price: new_price, total_amount: new_buyer_amount)
+
+    Rails.logger.debug("Updating portfolios after transaction #{transaction.id}")
+  end
+  
+  private
+
+  def fetch_stock_price_from_api(stock_id)
+    response = RestClient.get "https://api.coingecko.com/api/v3/coins/#{stock_id}?tickers=false&market_data=true&community_data=false&developer_data=false&sparkline=false"
+    json_response = JSON.parse(response.body)
+
+    stock_price = {
+      usd: json_response['market_data']['current_price']['usd']
+    }
+
+    return stock_price
+  end
+
 end

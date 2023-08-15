@@ -10,6 +10,7 @@ Rails.application.routes.draw do
   
   mount_devise_token_auth_for 'Admin', at: 'admin_auth'
 
+  resource :user, only: [:update, :show]
 
   namespace :admin do
     resources :users, only: [:index, :update, :show] do
@@ -33,10 +34,7 @@ Rails.application.routes.draw do
   delete 'portfolios/:id', to: 'portfolios#destroy'
 
   resources :portfolios do
-    resources :transactions, only: [:index, :create, :show] do
-      member do
-        patch 'approve_transaction'
-      end
+    resources :transactions, except: [:delete] do
     end
   end
 
