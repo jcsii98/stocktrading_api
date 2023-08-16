@@ -13,6 +13,28 @@ class Portfolio < ApplicationRecord
     end
   end
   
+  # on transaction.create
+
+  def self.check_buyer_portfolio(user, stock_id)
+    buyer_portfolio = user.portfolios.find_by(stock_id: stock_id)
+    if buyer_portfolio.nil?
+      return { sucess: false, message: "Portfolio with stock_id '#{stock_id}' must exist for the current user"}
+    else
+      return { success: true, buyer_portfolio: buyer_portfolio }
+    end
+  end
+
+  def self.check_seller_portfolio(seller_portfolio, transaction_quantity)
+    if transaction_quantity > seller_portfolio.quantity
+      return { success: false, message: "insufficient portfolio quantity for the transaction" }
+    else
+      return { success: true }
+    end
+  end
+  
+
+  # after transaction.approve
+
   def update_portfolios_after_transaction(transaction)
     buyer_portfolio = transaction.buyer_portfolio
     Rails.logger.debug("Updating portfolios after transaction #{transaction.id} with quantity: #{transaction.quantity}")

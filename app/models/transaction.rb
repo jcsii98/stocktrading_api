@@ -3,85 +3,108 @@ class Transaction < ApplicationRecord
     belongs_to :seller_portfolio, class_name: 'Portfolio', foreign_key: 'seller_portfolio_id'
 
     validates :seller_portfolio, :buyer_portfolio, :quantity, presence: true
-    validate :different_users
-    validate :positive_quantity
 
     after_update :update_portfolios_quantity, :update_user_wallet
     
-    def self.create_transaction(user, portfolio_id, quantity)
+    def self.check_valid_entry(user, portfolio_id, quantity)
+        Rails.logger.debug("check_valid_entry: Received quantity: #{quantity}")
+        
+        different_users_check = validate_different_users(user, portfolio_id)
+        return different_users_check if different_users_check
+
+        positive_quantity_check = validate_positive_quantity(quantity)
+        return positive_quantity_check if positive_quantity_check
+
         seller_portfolio = Portfolio.find(portfolio_id)
         transaction_stock_id = seller_portfolio.stock_id
         buyer_portfolio = user.portfolios.find_by(stock_id: transaction_stock_id)
 
-        stock_price = new.fetch_stock_price_from_api(transaction_stock_id)
-        price = stock_price[:usd]
-        amount = quantity.to_f * price.to_f
+        stock_price_from_api = StocksService.fetch_stock_price(transaction_stock_id)
 
-        if buyer_portfolio.nil?
-            return { success: false, message: "Portfolio with stock_id '#{transaction_stock_id}' must exist for the current user" }
-        elsif user.wallet_balance < amount
-            insufficient_amount = user.wallet_balance - amount
-            return { success: false, message: "Not enough funds, please top up '#{insufficient_amount}'" }
-        elsif quantity.to_f > seller_portfolio.quantity
-            return { success: false, message: 'Insufficient portfolio quantity for the transaction' }
-        else
-            return {
-                success: true,
-                seller_portfolio: seller_portfolio,
-                buyer_portfolio: buyer_portfolio,
-                transaction_stock_id: transaction_stock_id,
-                stock_price: stock_price,
-                price: price,
-                amount: amount
-            }
-        end
-    end
+        transaction_quantity = quantity.to_f
+        amount = transaction_quantity * stock_price_from_api
 
-    def fetch_stock_price_from_api(stock_id)
-        response = RestClient.get "https://api.coingecko.com/api/v3/coins/#{stock_id}?tickers=false&market_data=true&community_data=false&developer_data=false&sparkline=false"
-        json_response = JSON.parse(response.body)
+        # Validation methods return error messages or nil if successful
+        buyer_portfolio_check = validate_buyer_portfolio(user, transaction_stock_id)
+        return buyer_portfolio_check if buyer_portfolio_check
 
-        stock_price = {
-        usd: json_response['market_data']['current_price']['usd']
+        cover_result = validate_covering_pending_amount(user, amount)
+        return cover_result if cover_result
+
+        seller_portfolio_check = validate_seller_portfolio(seller_portfolio, transaction_quantity)
+        return seller_portfolio_check if seller_portfolio_check
+
+        # If all validations pass, return a success hash
+        # update pending amount
+        user.add_pending_amount(amount)
+        {
+        success: true,
+        seller_portfolio: seller_portfolio,
+        buyer_portfolio: buyer_portfolio,
+        transaction_stock_id: transaction_stock_id,
+        stock_price: stock_price_from_api,
+        amount: amount
         }
-
-        return stock_price
     end
+
     private
 
+    # creation validations
+
+    def self.validate_different_users(user, portfolio_id)
+        seller_portfolio = Portfolio.find_by(id: portfolio_id)
+        if !seller_portfolio
+            { success: false, message: "Seller portfolio does not exist" }
+        elsif seller_portfolio.user_id == user.id 
+            { success: false, message: "Buyer cannot be the same as the seller" }
+        end
+    end
+    
+    def self.validate_positive_quantity(quantity)
+        Rails.logger.debug("Positive quantity validation called with quantity: #{quantity}")
+
+        { success: false, message: "Quantity must be a positive number" } if quantity.nil? || quantity.to_s.empty? || quantity.to_f <= 0
+    end
+
+    def self.validate_buyer_portfolio(user, stock_id)
+        buyer_portfolio = user.portfolios.find_by(stock_id: stock_id)
+        { success: false, message: "Portfolio with stock_id '#{stock_id}' must exist for the current user" } unless buyer_portfolio
+    end
+
+    def self.validate_covering_pending_amount(user, amount)
+        cover_result = user.can_cover_resulting_pending_amount(amount)
+        { success: false, message: cover_result[:message] } unless cover_result[:success]
+    end
+
+    def self.validate_seller_portfolio(seller_portfolio, transaction_quantity)
+        { success: false, message: 'Insufficient portfolio quantity for the transaction' } if transaction_quantity > seller_portfolio.quantity
+    end
   
+    # callbacks
+
     def update_portfolios_quantity
         Rails.logger.debug("Transaction status: #{status}")
-        if status == 'approved'
-            Rails.logger.debug("Updating portfolios after approval")
-            seller_portfolio.update_portfolios_after_transaction(self)
-        end
+        return unless status == 'approved'
+
+        Rails.logger.debug("Updating portfolios after approval")
+        seller_portfolio.update_portfolios_after_transaction(self)
     end
 
     def update_user_wallet
         Rails.logger.debug("Transaction status: #{status}")
-        if status == 'approved'
-            Rails.logger.debug("Updating wallets after approval")
-                buyer_user = buyer_portfolio.user
-                seller_user = seller_portfolio.user
+        return unless status == 'approved'
 
-                transaction_amount = self.amount 
-
-                buyer_user.update_wallet_balance(transaction_amount, :subtract)
-                seller_user.update_wallet_balance(transaction_amount, :add)
-        end
-    end
-    
-    def different_users
-        errors.add(:buyer_portfolio_id, "can't be the same as the seller") if seller_portfolio_id == buyer_portfolio_id
+        Rails.logger.debug("Updating wallets after approval")
+        update_buyer_and_seller_wallets
     end
 
-    def positive_quantity
-        if quantity.blank? || quantity.to_f <= 0
-            errors.add(:quantity, "must be a positive number")
-        end
+    def update_buyer_and_seller_wallets
+        buyer_user = buyer_portfolio.user
+        seller_user = seller_portfolio.user
+        transaction_amount = amount
+
+        buyer_user.update_wallet_balance(transaction_amount, :subtract)
+        seller_user.update_wallet_balance(transaction_amount, :add)
     end
-
-
 
 end
