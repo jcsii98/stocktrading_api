@@ -2,7 +2,7 @@ class PortfoliosController < ApplicationController
     before_action :authenticate_user!, only: [:index, :create, :destroy]
     before_action :verify_approved, only: [:create, :destroy, :update]
     before_action :set_portfolio, only: [:update, :destroy]
-    before_action :authenticate_admin!, only: [:index_by_user]
+    # before_action :authenticate_admin!, only: [:index_by_user]
     before_action :authorize_access, only: [:update]
 
     def index
@@ -15,15 +15,9 @@ class PortfoliosController < ApplicationController
             end
     end
 
-    def index_by_stock
-        stock_id = params[:stock_id]
-        @portfolios = Portfolio.where(stock_id: stock_id)
-
-        if @portfolios.empty?
-            render json: { status: 'error', message: 'No portfolios found for the specified stock_id' }, status: :unprocessable_entity
-        else
-        render json: { data: @portfolios }
-        end
+    def index_by_stock_id
+        portfolios = PortfoliosService.index_by_stock_id(params[:stock_id])
+        render json: { data: portfolios }
     end
 
     def index_by_user
