@@ -79,15 +79,13 @@ class PortfoliosController < ApplicationController
 
     def update
         if @portfolio.update(portfolio_params)
-            # Calculate total_amount based on the updated quantity and price
-            @portfolio.total_amount = @portfolio.price * @portfolio.quantity
-            @portfolio.save
-
+            @portfolio.update_portfolios_total_amount
             render json: { status: 'success', data: @portfolio }
         else
             render json: { status: 'error', errors: @portfolio.errors.full_messages }, status: :unprocessable_entity
         end
     end
+
 
     def destroy
         if @portfolio.destroy

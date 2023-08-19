@@ -1,14 +1,21 @@
 require 'rails_helper'
 
 RSpec.describe TransactionsController, type: :controller do
-  describe 'GET /index' do
-    let(:user) { create(:user) }
-    let(:portfolio) { create(:portfolio, user: user) }
-    let(:user2) { create(:user) }
-    let(:portfolio2) { create(:portfolio, user: user2) }
 
+  let(:user) { create(:user) }
+  let(:portfolio) { create(:portfolio, user: user) }
+  let(:auth_headers) { user.create_new_auth_token }
+  let(:user2) { create(:user) }
+  let(:portfolio2) { create(:portfolio, user: user2) }
+  let(:auth_headers_2) { user2.create_new_auth_token }
+
+  before do
+    stocks_service = MockStocksService.new
+    allow(StocksService).to receive(:new).and_return(stocks_service)
+  end
+
+  describe 'GET /index' do
     it 'returns a list of buyer and seller transactions of user portfolio' do
-      request.headers.merge!(user.create_new_auth_token)
       transaction = create(:transaction, buyer_portfolio_id: portfolio.id, seller_portfolio_id: portfolio2.id)
 
       request.headers.merge!(user2.create_new_auth_token)
@@ -78,7 +85,6 @@ RSpec.describe TransactionsController, type: :controller do
         expect(response_json['status']).to eq('success')
         expect(response_json['data']['buyer_portfolio_id']).to eq(portfolio.id)
         expect(response_json['data']['seller_portfolio_id']).to eq(transaction_data[:seller_portfolio].id)
-        # Add more expectations as needed
       end
     end
 
@@ -102,66 +108,15 @@ RSpec.describe TransactionsController, type: :controller do
     end
   end
 
-#   describe 'PATCH /update' do
-#     let(:user) { create(:user) }
-#     let(:user2) { create(:user) }
-#     let(:stock_id) { 'mock_id' }
-#     let(:stock_price) { 100.0 }
-#     let(:quantity) { 10 }
-
-#     before do
-#       allow(controller).to receive(:fetch_stock_price_from_api).and_return({ usd: stock_price })
-#     end
-#     it 'approves a transaction' do
-#       # Create the portfolios associated with the respective users
-#       request.headers.merge!(user2.create_new_auth_token)
-#       seller_portfolio = create(:portfolio, user: user2, stock_id: stock_id)
-
-#       request.headers.merge!(user.create_new_auth_token)
-#       buyer_portfolio = create(:portfolio, user: user, stock_id: stock_id)
-
-#       # Create a pending transaction between the portfolios
-#       request.headers.merge!(user.create_new_auth_token)
-#       transaction = create(:transaction,
-#         buyer_portfolio: buyer_portfolio,
-#         seller_portfolio: seller_portfolio,
-#         quantity: quantity,
-#         status: 'pending',
-#         stock_id: stock_id
-#       )
-
-#       request.headers.merge!(user2.create_new_auth_token)
-#       put :approve_transaction, params: { portfolio_id: seller_portfolio.id, id: transaction.id }
-
-#       expect(response).to have_http_status(:ok)
-#       response_json = JSON.parse(response.body)
-
-#       expect(response_json['status']).to eq('success')
-#       expect(response_json['message']).to eq('Transaction approved successfully')
-
-#       # Check that the transaction's status has been updated to 'approved'
-#       transaction.reload
-#       expect(transaction.status).to eq('approved')
-
-#       # Check that the portfolio and buyer_portfolio have been updated
-#       seller_portfolio.reload
-#       buyer_portfolio.reload
-#       expect(seller_portfolio.quantity).to eq(100000 - transaction.quantity)
-#       expect(buyer_portfolio.quantity).to eq(100000 + transaction.quantity)
-#     end
-#   end
-
-
-describe 'PATCH #update' do
+  describe 'PATCH #update' do
     let(:user) { create(:user) }
     let(:portfolio) { create(:portfolio, user: user) }
     let(:user2) { create(:user) }
     let(:portfolio2) { create(:portfolio, user: user2) }
     let(:transaction) { create(:transaction, amount: 100, seller_portfolio: portfolio, buyer_portfolio: portfolio2) }
     let(:transaction2) { create(:transaction, status: 'approved', amount: 100, seller_portfolio: portfolio, buyer_portfolio: portfolio2) }
+    
     context 'when the user is authenticated' do
-      before { sign_in(user) }
-
       context 'when the transaction is not approved' do
         it 'updates the transaction status to approved' do
           request.headers.merge!(user.create_new_auth_token)
@@ -172,7 +127,6 @@ describe 'PATCH #update' do
           expect(response).to have_http_status(:ok)
         end
       end
-
       context 'when the transaction is already approved' do
         it 'returns an error response' do
           request.headers.merge!(user.create_new_auth_token)
@@ -184,7 +138,6 @@ describe 'PATCH #update' do
         end
       end
     end
-
     context 'when the user is not authenticated' do
       it 'returns an unauthorized response' do
         patch :update, params: { portfolio_id: portfolio.id, id: transaction.id }
@@ -192,10 +145,7 @@ describe 'PATCH #update' do
         expect(response).to have_http_status(:unauthorized)
       end
     end
-
     context 'when the transaction or portfolio is not found' do
-      before { sign_in(user) }
-
       it 'returns a not found response' do
         invalid_transaction_id = transaction.id + 1
         request.headers.merge!(user.create_new_auth_token)

@@ -8,6 +8,13 @@ RSpec.describe Transaction, type: :model do
   let(:transaction_quantity) { 10 }
   let(:stock_price_from_api) { 50 }
 
+
+  before do
+    stocks_service = MockStocksService.new
+    allow(StocksService).to receive(:new).and_return(stocks_service)
+  end
+
+
   describe 'validations' do
     it { should validate_presence_of(:seller_portfolio) }
     it { should validate_presence_of(:buyer_portfolio) }
@@ -21,7 +28,6 @@ RSpec.describe Transaction, type: :model do
 
   describe 'methods' do
     describe '.check_valid_entry' do
-      describe '.check_valid_entry' do
         context 'when all validations pass' do
           before do
             allow(Transaction).to receive(:validate_different_users).and_return(nil)
@@ -29,7 +35,6 @@ RSpec.describe Transaction, type: :model do
             allow(Transaction).to receive(:find).and_return(seller_portfolio)
             allow(seller_portfolio).to receive(:stock_id).and_return('mock_stock_id')
             allow(user.portfolios).to receive(:find_by).and_return(buyer_portfolio)
-            allow(StocksService).to receive(:fetch_stock_price).and_return(stock_price_from_api)
             allow(Transaction).to receive(:validate_buyer_portfolio).and_return(nil)
             allow(Transaction).to receive(:validate_covering_pending_amount).and_return(nil)
             allow(Transaction).to receive(:validate_seller_portfolio).and_return(nil)
@@ -52,6 +57,5 @@ RSpec.describe Transaction, type: :model do
           end
         end
       end
-    end
   end
 end

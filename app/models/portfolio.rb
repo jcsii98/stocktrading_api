@@ -4,13 +4,18 @@ class Portfolio < ApplicationRecord
   has_many :seller_transactions, class_name: 'Transaction', foreign_key: 'seller_portfolio_id'
   validates :stock_id, presence: true, uniqueness: { scope: :user_id, message: "portfolio already exists for this stock" }
   validate :positive_quantity
-  
+  before_save :update_price
   
   def positive_quantity
     if quantity.blank? || quantity.to_f < 0
       errors.add(:quantity, "must be a positive number")
       Rails.logger.debug("Validation failed: quantity=#{quantity}")
     end
+  end
+  
+  def update_portfolios_total_amount
+    # Calculate total_amount based on the updated quantity and price
+    self.total_amount = self.price * self.quantity
   end
   
   # on transaction.create
@@ -60,4 +65,10 @@ class Portfolio < ApplicationRecord
   end
   
   private
+
+  def update_price
+    stocks_service = StocksService.new
+    self.price = stocks_service.fetch_stock_price(stock_id)
+  end
+
 end

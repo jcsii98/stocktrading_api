@@ -3,6 +3,11 @@ require 'rails_helper'
 RSpec.describe Portfolio, type: :model do
   let(:user) { create(:user) }
 
+  before do
+    stocks_service = MockStocksService.new
+    allow(StocksService).to receive(:new).and_return(stocks_service)
+  end
+  
   describe 'validations' do
     it 'is valid with valid attributes' do
       portfolio = Portfolio.new(user: user, stock_id: 'mock_id', quantity: 100)
