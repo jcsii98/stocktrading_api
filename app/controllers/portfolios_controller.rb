@@ -37,7 +37,8 @@ class PortfoliosController < ApplicationController
         @portfolio = current_user.portfolios.build(portfolio_params)
 
 
-        available_stocks = verify_available_stock(@portfolio.stock_id)
+        stocks_service = StocksService.new
+        available_stocks = stocks_service.fetch_available_stocks
         matching_stock = available_stocks.find { |stock| stock[:id] == @portfolio.stock_id }
 
         if matching_stock.nil?
@@ -45,7 +46,7 @@ class PortfoliosController < ApplicationController
             return
         end
 
-        fetched_price = fetch_price_from_api(@portfolio.stock_id)
+        fetched_price = stocks_service.fetch_stock_price(@portfolio.stock_id)
 
         if fetched_price.nil?
             render json: { status: 'error', message: 'Price cannot be fetched' }, status: :unprocessable_entity
@@ -98,29 +99,6 @@ class PortfoliosController < ApplicationController
 
 
     private
-
-    def verify_available_stock(stock_id)
-        response = RestClient.get 'https://api.coingecko.com/api/v3/coins/list'
-        json_response = JSON.parse(response.body)
-        
-        # Extract relevant data from the JSON response, for example:
-        available_stocks = json_response.map { |stock| { id: stock['id'], name: stock['name'], symbol: stock['symbol'] } }
-        return available_stocks
-    end
-    
-    def fetch_price_from_api(stock_id)
-        response = RestClient.get 'https://api.coingecko.com/api/v3/coins/01coin?tickers=false&market_data=true&community_data=false&developer_data=false&sparkline=false' 
-        json_response = JSON.parse(response.body)
-
-        stock_details = {
-            id: json_response['id'],
-            name: json_response['name'],
-            symbol: json_response['symbol'],
-            usd: json_response['market_data']['current_price']['usd']
-        }
-
-        return stock_details[:usd]
-    end
 
     def set_portfolio
         @portfolio = current_user.portfolios.find(params[:id])

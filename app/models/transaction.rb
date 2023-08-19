@@ -8,6 +8,8 @@ class Transaction < ApplicationRecord
     
     def self.check_valid_entry(user, portfolio_id, quantity)
         Rails.logger.debug("check_valid_entry: Received quantity: #{quantity}")
+
+        stocks_service = StocksService.new
         
         different_users_check = validate_different_users(user, portfolio_id)
         return different_users_check if different_users_check
@@ -19,7 +21,7 @@ class Transaction < ApplicationRecord
         transaction_stock_id = seller_portfolio.stock_id
         buyer_portfolio = user.portfolios.find_by(stock_id: transaction_stock_id)
 
-        stock_price_from_api = StocksService.fetch_stock_price(transaction_stock_id)
+        stock_price_from_api = stocks_service.fetch_stock_price(transaction_stock_id)
 
         transaction_quantity = quantity.to_f
         amount = transaction_quantity * stock_price_from_api

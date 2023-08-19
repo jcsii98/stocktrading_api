@@ -1,19 +1,15 @@
 class StocksService
-  def self.fetch_stock_price(stock_id)
+
+  def fetch_stock_price(stock_id)
     api_url = "https://api.coingecko.com/api/v3/coins/#{stock_id}?tickers=false&market_data=true&community_data=false&developer_data=false&sparkline=false"
     response = RestClient.get(api_url)
     json_response = JSON.parse(response.body)
 
-    market_data = json_response[27]["market_data"]
-    # puts "market_data: #{market_data.inspect}"  
+    market_data = json_response["market_data"]
+    current_price = market_data["current_price"]["usd"]
+    stock_price = current_price.to_f
 
-    current_price = market_data["current_price"]
-    puts "current_price: #{current_price.inspect}"  
-    stock_price = current_price['usd']
-    puts "stock_price: #{stock_price.inspect}"  
-
-    stock_price.to_f
-    puts "stock_price.to_f: #{stock_price.to_f.inspect}"
+    stock_price
   rescue => e
     puts "Error fetching stock price: #{e.inspect}"  
     raise e

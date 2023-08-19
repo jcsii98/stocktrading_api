@@ -36,6 +36,8 @@ class Portfolio < ApplicationRecord
   # after transaction.approve
 
   def update_portfolios_after_transaction(transaction)
+    stocks_service = StocksService.new
+
     buyer_portfolio = transaction.buyer_portfolio
     Rails.logger.debug("Updating portfolios after transaction #{transaction.id} with quantity: #{transaction.quantity}")
     Rails.logger.debug("seller quantity before #{quantity}")
@@ -45,7 +47,7 @@ class Portfolio < ApplicationRecord
     new_buyer_quantity = buyer_portfolio.quantity + transaction.quantity
     Rails.logger.debug("buyer quantity after #{new_buyer_quantity}")
     
-    stock_price = StocksService.fetch_stock_price(transaction.stock_id)
+    stock_price = stocks_service.fetch_stock_price(transaction.stock_id)
     new_price = stock_price
 
     new_seller_amount = new_seller_quantity.to_f * new_price.to_f
