@@ -44,9 +44,16 @@ class TransactionsController < ApplicationController
 
     def update
       begin
+        if current_user.nil?
+          render json: { status: 'error', message: 'Transaction unauthorized' }, status: :unauthorized
+          return
+        end
+
         portfolio = current_user.portfolios.find(params[:portfolio_id])
+
         transaction = portfolio.seller_transactions.find(params[:id])
-        
+      
+
         if transaction.status == 'approved'
           render json: { status: 'error', message: 'Transaction is already approved' }, status: :unprocessable_entity
           return
@@ -57,9 +64,12 @@ class TransactionsController < ApplicationController
         else
           render json: { status: 'error', message: transaction.errors.full_messages }, status: :unprocessable_entity
         end
+
       rescue ActiveRecord::RecordNotFound
         render json: { status: 'error', message: 'Transaction not found or unauthorized' }, status: :not_found
+        return
       end
+
     end
 
   private
@@ -76,5 +86,4 @@ class TransactionsController < ApplicationController
     rescue ActiveRecord::RecordNotFound
         render json: { status: 'error', message: 'Portfolio not found.' }, status: :not_found
   end
-
 end

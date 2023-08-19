@@ -18,7 +18,7 @@ class Portfolio < ApplicationRecord
   def self.check_buyer_portfolio(user, stock_id)
     buyer_portfolio = user.portfolios.find_by(stock_id: stock_id)
     if buyer_portfolio.nil?
-      return { sucess: false, message: "Portfolio with stock_id '#{stock_id}' must exist for the current user"}
+      return { success: false, message: "Portfolio with stock_id '#{stock_id}' must exist for the current user"}
     else
       return { success: true, buyer_portfolio: buyer_portfolio }
     end
@@ -26,7 +26,7 @@ class Portfolio < ApplicationRecord
 
   def self.check_seller_portfolio(seller_portfolio, transaction_quantity)
     if transaction_quantity > seller_portfolio.quantity
-      return { success: false, message: "insufficient portfolio quantity for the transaction" }
+      return { success: false, message: "Insufficient portfolio quantity for the transaction" }
     else
       return { success: true }
     end
@@ -45,8 +45,8 @@ class Portfolio < ApplicationRecord
     new_buyer_quantity = buyer_portfolio.quantity + transaction.quantity
     Rails.logger.debug("buyer quantity after #{new_buyer_quantity}")
     
-    stock_price = fetch_stock_price_from_api(transaction.stock_id)
-    new_price = stock_price[:usd]
+    stock_price = StocksService.fetch_stock_price(transaction.stock_id)
+    new_price = stock_price
 
     new_seller_amount = new_seller_quantity.to_f * new_price.to_f
     new_buyer_amount = new_buyer_quantity.to_f * new_price.to_f
@@ -58,16 +58,4 @@ class Portfolio < ApplicationRecord
   end
   
   private
-
-  def fetch_stock_price_from_api(stock_id)
-    response = RestClient.get "https://api.coingecko.com/api/v3/coins/#{stock_id}?tickers=false&market_data=true&community_data=false&developer_data=false&sparkline=false"
-    json_response = JSON.parse(response.body)
-
-    stock_price = {
-      usd: json_response['market_data']['current_price']['usd']
-    }
-
-    return stock_price
-  end
-
 end

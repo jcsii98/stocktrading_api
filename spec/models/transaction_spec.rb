@@ -1,44 +1,57 @@
 require 'rails_helper'
 
-RSpec.describe Portfolio, type: :model do
-  describe 'associations' do
-    it 'should belong to user' do
-      t = Portfolio.reflect_on_association(:user)
-      expect(t.macro).to eq(:belongs_to)
-    end
-
-    it 'should have many buyer transactions' do
-      t = Portfolio.reflect_on_association(:buyer_transactions)
-      expect(t.macro).to eq(:has_many)
-      expect(t.options[:class_name]).to eq('Transaction')
-      expect(t.options[:foreign_key]).to eq('buyer_portfolio_id')
-    end
-
-    it 'should have many seller transactions' do
-      t = Portfolio.reflect_on_association(:seller_transactions)
-      expect(t.macro).to eq(:has_many)
-      expect(t.options[:class_name]).to eq('Transaction')
-      expect(t.options[:foreign_key]).to eq('seller_portfolio_id')
-    end
-  end
+RSpec.describe Transaction, type: :model do
+  let(:user) { create(:user) }
+  let(:buyer_portfolio) { create(:portfolio, user: user) }
+  let(:user2) { create(:user) }
+  let(:seller_portfolio) { create(:portfolio, user: user2) }
+  let(:transaction_quantity) { 10 }
+  let(:stock_price_from_api) { 50 }
 
   describe 'validations' do
-    let!(:user) { create(:user) }
-    let!(:existing_portfolio) { create(:portfolio, user: user) } 
-
-    it { should validate_uniqueness_of(:stock_id).scoped_to(:user_id).with_message('portfolio already exists for this stock') }
+    it { should validate_presence_of(:seller_portfolio) }
+    it { should validate_presence_of(:buyer_portfolio) }
+    it { should validate_presence_of(:quantity) }
   end
 
-  describe 'custom validations' do
-    it 'should validate that quantity must be a positive number' do
-      user = create(:user)
-      portfolio = build(:portfolio, user: user, quantity: -10)
-      expect(portfolio).not_to be_valid
-      expect(portfolio.errors[:quantity]).to include('must be a positive number')
+  describe 'associations' do
+    it { should belong_to(:buyer_portfolio).class_name('Portfolio') }
+    it { should belong_to(:seller_portfolio).class_name('Portfolio') }
+  end
 
-      portfolio.quantity = 100
-      expect(portfolio).to be_valid
+  describe 'methods' do
+    describe '.check_valid_entry' do
+      describe '.check_valid_entry' do
+        context 'when all validations pass' do
+          before do
+            allow(Transaction).to receive(:validate_different_users).and_return(nil)
+            allow(Transaction).to receive(:validate_positive_quantity).and_return(nil)
+            allow(Transaction).to receive(:find).and_return(seller_portfolio)
+            allow(seller_portfolio).to receive(:stock_id).and_return('mock_stock_id')
+            allow(user.portfolios).to receive(:find_by).and_return(buyer_portfolio)
+            allow(StocksService).to receive(:fetch_stock_price).and_return(stock_price_from_api)
+            allow(Transaction).to receive(:validate_buyer_portfolio).and_return(nil)
+            allow(Transaction).to receive(:validate_covering_pending_amount).and_return(nil)
+            allow(Transaction).to receive(:validate_seller_portfolio).and_return(nil)
+            allow(user).to receive(:add_pending_amount).and_return(nil)
+          end
+
+          it 'returns a success hash with valid data' do
+            result = Transaction.check_valid_entry(user, seller_portfolio.id, transaction_quantity)
+            expect(result[:success]).to be_truthy
+            expect(result[:seller_portfolio]).to eq(seller_portfolio)
+            expect(result[:buyer_portfolio]).to eq(buyer_portfolio)
+          end
+        end
+        context 'when a validation fails' do
+          it 'returns a hash with success false' do
+            invalid_seller_portfolio = seller_portfolio.id + 1
+            result = Transaction.check_valid_entry(user, invalid_seller_portfolio, transaction_quantity )
+            expect(result[:success]).to eq(false)
+            expect(result[:message]).to eq('Seller portfolio does not exist')
+          end
+        end
+      end
     end
   end
-
 end

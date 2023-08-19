@@ -13,13 +13,10 @@ Rails.application.routes.draw do
   resource :user, only: [:update, :show]
 
   namespace :admin do
-    resources :users, only: [:index, :update, :show] do
-      collection do
-        get :pending_accounts
-      end
-      get 'pending_accounts/:id', action: 'show_pending_account', on: :collection, as: :show_pending_account
-    end
+    resources :users, only: [:index, :show]
+    resources :pending_users, only: [:index, :show, :update]
   end
+
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
   # Defines the root path route ("/")

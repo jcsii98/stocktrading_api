@@ -4,9 +4,22 @@ class StocksService
     response = RestClient.get(api_url)
     json_response = JSON.parse(response.body)
 
-    stock_price = json_response['market_data']['current_price']['usd']
+    market_data = json_response[27]["market_data"]
+    # puts "market_data: #{market_data.inspect}"  
+
+    current_price = market_data["current_price"]
+    puts "current_price: #{current_price.inspect}"  
+    stock_price = current_price['usd']
+    puts "stock_price: #{stock_price.inspect}"  
+
     stock_price.to_f
+    puts "stock_price.to_f: #{stock_price.to_f.inspect}"
+  rescue => e
+    puts "Error fetching stock price: #{e.inspect}"  
+    raise e
   end
+
+
 
   def fetch_available_stocks
     response = RestClient.get 'https://api.coingecko.com/api/v3/coins/list'
