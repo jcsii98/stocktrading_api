@@ -21,7 +21,7 @@ module StocktradingApi
         resource '*',
           headers: :any,
           expose: ['access-token', 'expiry', 'token-type', 'uid', 'client'],
-          methods: [:get, :post, :options, :delete, :put]
+          methods: [:get, :post, :options, :delete, :put, :patch]
       end
     end
     # Configuration for the application, engines, and railties goes here.

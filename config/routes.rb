@@ -12,6 +12,8 @@ Rails.application.routes.draw do
 
   resource :user, only: [:update, :show]
 
+  resource :admin, only: [:show]
+  
   namespace :admin do
     resources :users, only: [:index, :show]
     resources :pending_users, only: [:index, :show, :update]
