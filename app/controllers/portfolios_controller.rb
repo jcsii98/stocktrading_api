@@ -2,7 +2,7 @@ class PortfoliosController < ApplicationController
     before_action :authenticate_user!, only: [:index, :create, :destroy]
     before_action :verify_approved, only: [:create, :destroy, :update]
     before_action :set_portfolio, only: [:update, :destroy]
-    # before_action :authenticate_admin!, only: [:index_by_user]
+    before_action :authenticate_admin!, only: [:index_by_user, :index_by_stock_id]
     before_action :authorize_access, only: [:update]
 
     def index
@@ -21,10 +21,8 @@ class PortfoliosController < ApplicationController
     end
 
     def index_by_user
-        user_id = params[:user_id]
-        @portfolios = Portfolio.where(user_id: user_id)
-
-        render json: { data: @portfolios }
+        portfolios = PortfoliosService.index_by_user(params[:user_id])
+        render json: { data: portfolios }
     end
 
     def create

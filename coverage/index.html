@@ -14,7 +14,7 @@
       <img src="./assets/0.12.3/loading.gif" alt="loading"/>
     </div>
     <div id="wrapper" class="hide">
-      <div class="timestamp">Generated <abbr class="timeago" title="2023-08-20T01:47:05+08:00">2023-08-20T01:47:05+08:00</abbr></div>
+      <div class="timestamp">Generated <abbr class="timeago" title="2023-08-21T19:43:27+08:00">2023-08-21T19:43:27+08:00</abbr></div>
       <ul class="group_tabs"></ul>
 
       <div id="content">
@@ -23,7 +23,7 @@
     <span class="group_name">All Files</span>
     (<span class="covered_percent">
       <span class="green">
-  94.14%
+  94.15%
 </span>
 
      </span>
@@ -43,11 +43,11 @@
   </div>
 
   <div class="t-line-summary">
-    <b>905</b> relevant lines,
-    <span class="green"><b>852</b> lines covered</span> and
+    <b>906</b> relevant lines,
+    <span class="green"><b>853</b> lines covered</span> and
     <span class="red"><b>53</b> lines missed. </span>
     (<span class="green">
-  94.14%
+  94.15%
 </span>
 )
   </div>
@@ -315,9 +315,9 @@
           <tr class="t-file">
             <td class="strong t-file__name"><a href="#98c01b18d201570165b0ba6f8b10e6b6690fd8e2" class="src_link" title="config/routes.rb">config/routes.rb</a></td>
             <td class="green strong cell--number t-file__coverage">100.00 %</td>
-            <td class="cell--number">43</td>
-            <td class="cell--number">20</td>
-            <td class="cell--number">20</td>
+            <td class="cell--number">45</td>
+            <td class="cell--number">21</td>
+            <td class="cell--number">21</td>
             <td class="cell--number">0</td>
             <td class="cell--number">1.00</td>
             
@@ -8322,7 +8322,7 @@
 
             
 
-            <code class="ruby">          methods: [:get, :post, :options, :delete, :put]</code>
+            <code class="ruby">          methods: [:get, :post, :options, :delete, :put, :patch]</code>
           </li>
         </div>
       
@@ -14247,8 +14247,8 @@
     
 
     <div class="t-line-summary">
-      <b>20</b> relevant lines.
-      <span class="green"><b>20</b> lines covered</span> and
+      <b>21</b> relevant lines.
+      <span class="green"><b>21</b> lines covered</span> and
       <span class="red"><b>0</b> lines missed.</span>
     </div>
 
@@ -14420,18 +14420,18 @@
 
             
 
-            <code class="ruby">  namespace :admin do</code>
+            <code class="ruby">  resource :admin, only: [:show]</code>
           </li>
         </div>
       
         <div>
-          <li class="covered" data-hits="1" data-linenumber="16">
-            <span class="hits">1</span>
+          <li class="never" data-hits="" data-linenumber="16">
+            
             
 
             
 
-            <code class="ruby">    resources :users, only: [:index, :show]</code>
+            <code class="ruby">  </code>
           </li>
         </div>
       
@@ -14442,29 +14442,29 @@
 
             
 
+            <code class="ruby">  namespace :admin do</code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="covered" data-hits="1" data-linenumber="18">
+            <span class="hits">1</span>
+            
+
+            
+
+            <code class="ruby">    resources :users, only: [:index, :show]</code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="covered" data-hits="1" data-linenumber="19">
+            <span class="hits">1</span>
+            
+
+            
+
             <code class="ruby">    resources :pending_users, only: [:index, :show, :update]</code>
-          </li>
-        </div>
-      
-        <div>
-          <li class="never" data-hits="" data-linenumber="18">
-            
-            
-
-            
-
-            <code class="ruby">  end</code>
-          </li>
-        </div>
-      
-        <div>
-          <li class="never" data-hits="" data-linenumber="19">
-            
-            
-
-            
-
-            <code class="ruby"></code>
           </li>
         </div>
       
@@ -14475,7 +14475,7 @@
 
             
 
-            <code class="ruby">  # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html</code>
+            <code class="ruby">  end</code>
           </li>
         </div>
       
@@ -14497,7 +14497,7 @@
 
             
 
-            <code class="ruby">  # Defines the root path route (&quot;/&quot;)</code>
+            <code class="ruby">  # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html</code>
           </li>
         </div>
       
@@ -14508,7 +14508,7 @@
 
             
 
-            <code class="ruby">  # root &quot;articles#index&quot;</code>
+            <code class="ruby"></code>
           </li>
         </div>
       
@@ -14519,18 +14519,18 @@
 
             
 
-            <code class="ruby"></code>
+            <code class="ruby">  # Defines the root path route (&quot;/&quot;)</code>
           </li>
         </div>
       
         <div>
-          <li class="covered" data-hits="1" data-linenumber="25">
-            <span class="hits">1</span>
+          <li class="never" data-hits="" data-linenumber="25">
+            
             
 
             
 
-            <code class="ruby">  get &#39;/portfolios&#39;, to: &#39;portfolios#index&#39;</code>
+            <code class="ruby">  # root &quot;articles#index&quot;</code>
           </li>
         </div>
       
@@ -14541,7 +14541,7 @@
 
             
 
-            <code class="ruby">  </code>
+            <code class="ruby"></code>
           </li>
         </div>
       
@@ -14552,7 +14552,7 @@
 
             
 
-            <code class="ruby">  post &#39;/portfolios&#39;, to: &#39;portfolios#create&#39;</code>
+            <code class="ruby">  get &#39;/portfolios&#39;, to: &#39;portfolios#index&#39;</code>
           </li>
         </div>
       
@@ -14563,7 +14563,7 @@
 
             
 
-            <code class="ruby"></code>
+            <code class="ruby">  </code>
           </li>
         </div>
       
@@ -14574,7 +14574,7 @@
 
             
 
-            <code class="ruby">  delete &#39;portfolios/:id&#39;, to: &#39;portfolios#destroy&#39;</code>
+            <code class="ruby">  post &#39;/portfolios&#39;, to: &#39;portfolios#create&#39;</code>
           </li>
         </div>
       
@@ -14596,18 +14596,18 @@
 
             
 
-            <code class="ruby">  resources :portfolios do</code>
+            <code class="ruby">  delete &#39;portfolios/:id&#39;, to: &#39;portfolios#destroy&#39;</code>
           </li>
         </div>
       
         <div>
-          <li class="covered" data-hits="1" data-linenumber="32">
-            <span class="hits">1</span>
+          <li class="never" data-hits="" data-linenumber="32">
+            
             
 
             
 
-            <code class="ruby">    collection do</code>
+            <code class="ruby"></code>
           </li>
         </div>
       
@@ -14618,7 +14618,7 @@
 
             
 
-            <code class="ruby">      get :index_by_stock_id</code>
+            <code class="ruby">  resources :portfolios do</code>
           </li>
         </div>
       
@@ -14629,18 +14629,18 @@
 
             
 
-            <code class="ruby">      get :index_by_user</code>
+            <code class="ruby">    collection do</code>
           </li>
         </div>
       
         <div>
-          <li class="never" data-hits="" data-linenumber="35">
-            
-            
-
+          <li class="covered" data-hits="1" data-linenumber="35">
+            <span class="hits">1</span>
             
 
-            <code class="ruby">    end</code>
+            
+
+            <code class="ruby">      get :index_by_stock_id</code>
           </li>
         </div>
       
@@ -14651,7 +14651,7 @@
 
             
 
-            <code class="ruby">    resources :transactions, except: [:delete] do</code>
+            <code class="ruby">      get :index_by_user</code>
           </li>
         </div>
       
@@ -14667,13 +14667,13 @@
         </div>
       
         <div>
-          <li class="never" data-hits="" data-linenumber="38">
-            
-            
-
+          <li class="covered" data-hits="1" data-linenumber="38">
+            <span class="hits">1</span>
             
 
-            <code class="ruby">  end</code>
+            
+
+            <code class="ruby">    resources :transactions, except: [:delete] do</code>
           </li>
         </div>
       
@@ -14684,18 +14684,18 @@
 
             
 
-            <code class="ruby"></code>
+            <code class="ruby">    end</code>
           </li>
         </div>
       
         <div>
-          <li class="covered" data-hits="1" data-linenumber="40">
-            <span class="hits">1</span>
+          <li class="never" data-hits="" data-linenumber="40">
+            
             
 
             
 
-            <code class="ruby">  get &#39;/stocks/available_stocks&#39;, to: &#39;stocks#available_stocks&#39;</code>
+            <code class="ruby">  end</code>
           </li>
         </div>
       
@@ -14717,12 +14717,34 @@
 
             
 
-            <code class="ruby">  get &#39;/stocks/:id/stock_details&#39;, to: &#39;stocks#stock_details&#39;</code>
+            <code class="ruby">  get &#39;/stocks/available_stocks&#39;, to: &#39;stocks#available_stocks&#39;</code>
           </li>
         </div>
       
         <div>
           <li class="never" data-hits="" data-linenumber="43">
+            
+            
+
+            
+
+            <code class="ruby"></code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="covered" data-hits="1" data-linenumber="44">
+            <span class="hits">1</span>
+            
+
+            
+
+            <code class="ruby">  get &#39;/stocks/:id/stock_details&#39;, to: &#39;stocks#stock_details&#39;</code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="never" data-hits="" data-linenumber="45">
             
             
 
