@@ -1,6 +1,7 @@
 class TransactionsController < ApplicationController
     before_action :authorize_access, only: [:index, :show]
     before_action :authenticate_user!, only: [:create]
+
     
     def index
         portfolio = Portfolio.find(params[:portfolio_id])
@@ -75,7 +76,9 @@ class TransactionsController < ApplicationController
   private
   
   def authorize_access
-    authorize_portfolio_owner
+    authenticate_admin!
+  rescue
+    render json: { status: 'error', message: 'You are not authorized to access this resource.' }, status: :forbidden
   end
   
   def authorize_portfolio_owner

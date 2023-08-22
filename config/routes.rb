@@ -39,7 +39,4 @@ Rails.application.routes.draw do
     end
   end
 
-  get '/stocks/available_stocks', to: 'stocks#available_stocks'
-
-  get '/stocks/:id/stock_details', to: 'stocks#stock_details'
 end

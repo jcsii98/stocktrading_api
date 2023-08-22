@@ -15,8 +15,6 @@ class StocksService
     raise e
   end
 
-
-
   def fetch_available_stocks
     response = RestClient.get 'https://api.coingecko.com/api/v3/coins/list'
     json_response = JSON.parse(response.body)
