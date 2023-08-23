@@ -76,7 +76,11 @@ class TransactionsController < ApplicationController
   private
   
   def authorize_access
-    authenticate_admin!
+    if current_admin
+      authenticate_admin!
+    else
+      authorize_portfolio_owner
+    end
   rescue
     render json: { status: 'error', message: 'You are not authorized to access this resource.' }, status: :forbidden
   end

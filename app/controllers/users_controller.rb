@@ -3,7 +3,9 @@ class UsersController < ApplicationController
 
   def show 
     user = current_user
-    render json: { message: "user wallet balance: #{user.wallet_balance} with pending amount: #{user.pending_amount}"}
+    render json: {
+      wallet_balance: user.wallet_balance,
+      pending_amount: user.pending_amount }
   end
   
   def update
