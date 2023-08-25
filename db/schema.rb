@@ -48,10 +48,9 @@ ActiveRecord::Schema[7.0].define(version: 2023_08_16_102153) do
   end
 
   create_table "stocks", force: :cascade do |t|
-    t.string "stock_id"
-    t.decimal "price", precision: 15, scale: 10
-    t.decimal "quantity", precision: 15, scale: 10
-    t.decimal "total_amount", precision: 15, scale: 10
+    t.string "symbol"
+    t.string "name"
+    t.float "usd"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end

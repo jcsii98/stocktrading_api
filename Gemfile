@@ -56,3 +56,5 @@ gem 'devise'
 gem 'rest-client'
 
 gem 'rack-cors', :require => 'rack/cors'
+
+gem 'whenever', require: false
