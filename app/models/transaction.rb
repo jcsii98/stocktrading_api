@@ -18,16 +18,16 @@ class Transaction < ApplicationRecord
         return positive_quantity_check if positive_quantity_check
 
         seller_portfolio = Portfolio.find(portfolio_id)
-        transaction_stock_id = seller_portfolio.stock_id
-        buyer_portfolio = user.portfolios.find_by(stock_id: transaction_stock_id)
+        transaction_stock = seller_portfolio.stock
+        buyer_portfolio = user.portfolios.find_by(stock_id: transaction_stock.id)
 
-        stock_price_from_api = stocks_service.fetch_stock_price(transaction_stock_id)
+        stock_price = transaction_stock.usd
 
         transaction_quantity = quantity.to_f
-        amount = transaction_quantity * stock_price_from_api
+        amount = transaction_quantity * stock_price
 
         # Validation methods return error messages or nil if successful
-        buyer_portfolio_check = validate_buyer_portfolio(user, transaction_stock_id)
+        buyer_portfolio_check = validate_buyer_portfolio(user, transaction_stock)
         return buyer_portfolio_check if buyer_portfolio_check
 
         cover_result = validate_covering_pending_amount(user, amount)
@@ -43,8 +43,8 @@ class Transaction < ApplicationRecord
         success: true,
         seller_portfolio: seller_portfolio,
         buyer_portfolio: buyer_portfolio,
-        transaction_stock_id: transaction_stock_id,
-        stock_price: stock_price_from_api,
+        transaction_stock_id: transaction_stock.id,
+        stock_price: stock_price,
         amount: amount
         }
     end

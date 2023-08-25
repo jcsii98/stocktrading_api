@@ -1,8 +1,8 @@
 class PortfoliosController < ApplicationController
-    before_action :authenticate_user!, only: [:index, :create, :destroy]
-    before_action :verify_approved, only: [:create, :destroy, :update]
-    before_action :set_portfolio, only: [:update, :destroy]
-    before_action :authorize_access, only: [:update]
+    # before_action :authenticate_user!, only: [:index, :create, :destroy]
+    # before_action :verify_approved, only: [:create, :destroy, :update]
+    # before_action :set_portfolio, only: [:update, :destroy]
+    # before_action :authorize_access, only: [:update]
 
     def index
             @portfolios = current_user.portfolios
@@ -14,8 +14,8 @@ class PortfoliosController < ApplicationController
             end
     end
 
-    def index_by_stock_id
-        portfolios = PortfoliosService.index_by_stock_id(params[:stock_id])
+    def index_by_stock_symbol
+        portfolios = PortfoliosService.index_by_stock_symbol(params[:stock_symbol])
         render json: { data: portfolios }
     end
 
@@ -25,38 +25,11 @@ class PortfoliosController < ApplicationController
     end
 
     def create
-        @portfolio = current_user.portfolios.build(portfolio_params)
-
-
-        stocks_service = StocksService.new
-        available_stocks = stocks_service.fetch_available_stocks
-        matching_stock = available_stocks.find { |stock| stock[:id] == @portfolio.stock_id }
-
-        if matching_stock.nil?
-            render json: { status: 'error', message: 'Invalid stock_id' }, status: :unprocessable_entity
-            return
-        end
-
-        fetched_price = stocks_service.fetch_stock_price(@portfolio.stock_id)
-
-        if fetched_price.nil?
-            render json: { status: 'error', message: 'Price cannot be fetched' }, status: :unprocessable_entity
-            return
-        end
-
-        @portfolio.price = fetched_price.to_d
-
-        @portfolio.quantity ||= 0
-
-        total_amount = @portfolio.price * @portfolio.quantity
-
-        @portfolio.total_amount = total_amount
-
-        if @portfolio.save
-
-            render json: { status: 'success', data: @portfolio }, status: :created
+        portfolio_creator = PortfolioCreator.new(current_user, portfolio_params)
+        if portfolio_creator.create_portfolio
+            render json: { status: 'success', data: portfolio_creator.portfolio }, status: :created
         else
-            render json: { status: 'error', errors: @portfolio.errors.full_messages }, status: :unprocessable_entity
+            render json: { status: 'error', errors: portfolio_creator.portfolio.errors.full_messages }, status: :unprocessable_entity
         end
     end
 
@@ -102,7 +75,7 @@ class PortfoliosController < ApplicationController
     end
 
     def portfolio_params
-        params.require(:portfolio).permit(:stock_id, :quantity)
+        params.require(:portfolio).permit(:stock_symbol, :quantity)
     end
 
     def authorize_access

@@ -1,4 +1,5 @@
 class Stock < ApplicationRecord
+  has_many :portfolios
   def self.fetch_and_update_stock_data
     available_stocks = StocksService.new.fetch_available_stocks
     
@@ -22,22 +23,4 @@ class Stock < ApplicationRecord
     end
   end
 
-  def self.whenever_sample
-    puts "Running whenever_sample method"
-    
-    available_stocks = StocksService.new.fetch_available_stocks
-    available_stocks.each do |stock_data|
-      symbol = stock_data[:symbol]
-
-      unless symbol.present?
-        puts "Skipped stock with missing symbol"
-        next
-      end
-
-      stock = find_or_create_by(symbol: symbol)
-
-    end
-
-    puts "Running whenever_sample method complete"
-  end
 end

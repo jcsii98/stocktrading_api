@@ -1,6 +1,6 @@
 class PortfoliosService
-  def self.index_by_stock_id(stock_id)
-    portfolios = Portfolio.where(stock_id: stock_id)
+  def self.index_by_stock_symbol(stock_symbol)
+    portfolios = Portfolio.where(stock_symbol: stock_symbol)
     portfolios
   end
 

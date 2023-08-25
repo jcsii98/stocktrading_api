@@ -1,10 +1,11 @@
 class Portfolio < ApplicationRecord
   belongs_to :user
+  belongs_to :stock, foreign_key: 'stock_id'
   has_many :buyer_transactions, class_name: 'Transaction', foreign_key: 'buyer_portfolio_id'
   has_many :seller_transactions, class_name: 'Transaction', foreign_key: 'seller_portfolio_id'
-  validates :stock_id, presence: true, uniqueness: { scope: :user_id, message: "portfolio already exists for this stock" }
+  validates :stock_symbol, presence: true, uniqueness: { scope: :user_id, message: "portfolio already exists for this coin" }
   validate :positive_quantity
-  before_save :update_price
+  
   
   def positive_quantity
     if quantity.blank? || quantity.to_f < 0
@@ -41,7 +42,7 @@ class Portfolio < ApplicationRecord
   # after transaction.approve
 
   def update_portfolios_after_transaction(transaction)
-    stocks_service = StocksService.new
+    
 
     buyer_portfolio = transaction.buyer_portfolio
     Rails.logger.debug("Updating portfolios after transaction #{transaction.id} with quantity: #{transaction.quantity}")
@@ -52,23 +53,19 @@ class Portfolio < ApplicationRecord
     new_buyer_quantity = buyer_portfolio.quantity + transaction.quantity
     Rails.logger.debug("buyer quantity after #{new_buyer_quantity}")
     
-    stock_price = stocks_service.fetch_stock_price(transaction.stock_id)
-    new_price = stock_price
+    stock_price = transaction.price
+    
 
-    new_seller_amount = new_seller_quantity.to_f * new_price.to_f
-    new_buyer_amount = new_buyer_quantity.to_f * new_price.to_f
+    new_seller_amount = new_seller_quantity.to_f * stock_price.to_f
+    new_buyer_amount = new_buyer_quantity.to_f * stock_price.to_f
 
-    update(quantity: new_seller_quantity, price: new_price, total_amount: new_seller_amount)
-    buyer_portfolio.update(quantity: new_buyer_quantity, price: new_price, total_amount: new_buyer_amount)
+    update(quantity: new_seller_quantity, price: stock_price, total_amount: new_seller_amount)
+    buyer_portfolio.update(quantity: new_buyer_quantity, price: stock_price, total_amount: new_buyer_amount)
 
     Rails.logger.debug("Updating portfolios after transaction #{transaction.id}")
   end
   
   private
 
-  def update_price
-    stocks_service = StocksService.new
-    self.price = stocks_service.fetch_stock_price(stock_id)
-  end
 
 end

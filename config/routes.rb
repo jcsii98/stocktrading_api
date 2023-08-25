@@ -23,6 +23,7 @@ Rails.application.routes.draw do
 
   # Defines the root path route ("/")
   # root "articles#index"
+  get '/stocks', to: 'stocks#index'
 
   get '/portfolios', to: 'portfolios#index'
   
@@ -32,7 +33,7 @@ Rails.application.routes.draw do
 
   resources :portfolios do
     collection do
-      get :index_by_stock_id
+      get :index_by_stock_symbol
       get :index_by_user
     end
     resources :transactions, except: [:delete] do
