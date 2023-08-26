@@ -2,44 +2,50 @@ require 'rails_helper'
 
 RSpec.describe TransactionsController, type: :controller do
 
-  let(:user) { create(:user) }
-  let(:portfolio) { create(:portfolio, user: user) }
+  let(:user) { create(:user, account_pending: false) }
+  
   let(:auth_headers) { user.create_new_auth_token }
-  let(:user2) { create(:user) }
-  let(:portfolio2) { create(:portfolio, user: user2) }
-  let(:auth_headers_2) { user2.create_new_auth_token }
+  let(:user2) { create(:user, account_pending: false) }
 
-  before do
-    stocks_service = MockStocksService.new
-    allow(StocksService).to receive(:new).and_return(stocks_service)
-  end
+  let(:auth_headers_2) { user2.create_new_auth_token }
+  
 
   describe 'GET /index' do
     it 'returns a list of buyer and seller transactions of user portfolio' do
-      transaction = create(:transaction, buyer_portfolio_id: portfolio.id, seller_portfolio_id: portfolio2.id)
+      request.headers.merge!(user.create_new_auth_token)
+      stock = create(:stock, symbol: 'aaave')
+      portfolio1 = create(:portfolio, user: user, stock: stock) 
+      
 
       request.headers.merge!(user2.create_new_auth_token)
-      transaction2 = create(:transaction, buyer_portfolio_id: portfolio2.id, seller_portfolio_id: portfolio.id)
+      portfolio2 = create(:portfolio, user: user2, stock: stock) 
 
       request.headers.merge!(user.create_new_auth_token)
-      get :index, params: { portfolio_id: portfolio.id }
+      transaction = create(:transaction, buyer_portfolio: portfolio1, seller_portfolio: portfolio2)
+
+      request.headers.merge!(user2.create_new_auth_token)
+      transaction2 = create(:transaction, buyer_portfolio: portfolio2, seller_portfolio: portfolio1)
+
+      request.headers.merge!(user.create_new_auth_token)
+      get :index, params: { portfolio_id: portfolio1.id }
 
       expect(response).to have_http_status(:ok)
       response_json = JSON.parse(response.body)
       expect(response_json['status']).to eq('success')
       expect(response_json['buyer_transactions'].first['id']).to eq(transaction.id)
-      expect(response_json['buyer_transactions'].first['buyer_portfolio_id']).to eq(portfolio.id)
+      expect(response_json['buyer_transactions'].first['buyer_portfolio_id']).to eq(portfolio1.id)
       expect(response_json['buyer_transactions'].first['seller_portfolio_id']).to eq(portfolio2.id)
       expect(response_json['seller_transactions'].first['buyer_portfolio_id']).to eq(portfolio2.id)
-      expect(response_json['seller_transactions'].first['seller_portfolio_id']).to eq(portfolio.id)
+      expect(response_json['seller_transactions'].first['seller_portfolio_id']).to eq(portfolio1.id)
     end
   end
 
   describe 'GET /show' do
     let(:user) { create(:user) }
-    let(:portfolio) { create(:portfolio, user: user) }
+    let(:stock) { create(:stock, symbol: 'aaave')}
+    let(:portfolio) { create(:portfolio, user: user, stock: stock) }
     let(:user2) { create(:user) }
-    let(:portfolio2) { create(:portfolio, user: user2) }
+    let(:portfolio2) { create(:portfolio, user: user2, stock: stock) }
     it 'returns the transaction selected' do
       request.headers.merge!(user.create_new_auth_token)
       transaction = create(:transaction, buyer_portfolio_id: portfolio.id, seller_portfolio_id: portfolio2.id)
@@ -54,10 +60,11 @@ RSpec.describe TransactionsController, type: :controller do
   end
 
   describe 'POST #create' do
+    let(:stock) { create(:stock, symbol: 'aaave' )}
     let(:user) { create(:user) }
-    let(:portfolio) { create(:portfolio, user: user) }
+    let(:portfolio) { create(:portfolio, user: user, stock: stock) }
     let(:user2) { create(:user) }
-    let(:portfolio2) { create(:portfolio, user: user2) }
+    let(:portfolio2) { create(:portfolio, user: user2, stock: stock) }
 
     context 'with valid parameters' do
       let(:transaction_data) do
@@ -109,10 +116,11 @@ RSpec.describe TransactionsController, type: :controller do
   end
 
   describe 'PATCH #update' do
+    let(:stock) { create(:stock, symbol: 'aaave' )}
     let(:user) { create(:user) }
-    let(:portfolio) { create(:portfolio, user: user) }
+    let(:portfolio) { create(:portfolio, user: user, stock: stock) }
     let(:user2) { create(:user) }
-    let(:portfolio2) { create(:portfolio, user: user2) }
+    let(:portfolio2) { create(:portfolio, user: user2, stock: stock) }
     let(:transaction) { create(:transaction, amount: 100, seller_portfolio: portfolio, buyer_portfolio: portfolio2) }
     let(:transaction2) { create(:transaction, status: 'approved', amount: 100, seller_portfolio: portfolio, buyer_portfolio: portfolio2) }
     

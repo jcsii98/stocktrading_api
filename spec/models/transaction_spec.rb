@@ -1,18 +1,15 @@
 require 'rails_helper'
 
 RSpec.describe Transaction, type: :model do
+  let(:stock) { create(:stock, symbol: 'aaave') }
   let(:user) { create(:user) }
-  let(:buyer_portfolio) { create(:portfolio, user: user) }
+  let(:buyer_portfolio) { create(:portfolio, user: user, stock: stock) }
   let(:user2) { create(:user) }
-  let(:seller_portfolio) { create(:portfolio, user: user2) }
+  let(:seller_portfolio) { create(:portfolio, user: user2, stock: stock) }
   let(:transaction_quantity) { 10 }
   let(:stock_price_from_api) { 50 }
 
 
-  before do
-    stocks_service = MockStocksService.new
-    allow(StocksService).to receive(:new).and_return(stocks_service)
-  end
 
 
   describe 'validations' do

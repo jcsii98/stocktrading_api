@@ -29,6 +29,8 @@ Rails.application.routes.draw do
   
   post '/portfolios', to: 'portfolios#create'
 
+  patch '/portfolios/:id', to: 'portfolios#update'
+
   delete 'portfolios/:id', to: 'portfolios#destroy'
 
   resources :portfolios do

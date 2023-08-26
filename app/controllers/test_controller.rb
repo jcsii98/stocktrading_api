@@ -5,10 +5,7 @@ class TestController < ApplicationController
 
   def users_only
     render json: {
-      data: {
-        message: "Welcome #{current_user.full_name}",
-        user: current_user
-      }
+      data:  current_user 
     }, status: 200
   end
 

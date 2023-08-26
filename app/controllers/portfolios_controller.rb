@@ -1,8 +1,8 @@
 class PortfoliosController < ApplicationController
-    # before_action :authenticate_user!, only: [:index, :create, :destroy]
-    # before_action :verify_approved, only: [:create, :destroy, :update]
-    # before_action :set_portfolio, only: [:update, :destroy]
-    # before_action :authorize_access, only: [:update]
+    before_action :authenticate_user!, only: [:index, :create, :destroy]
+    before_action :verify_approved, only: [:create, :destroy, :update]
+    before_action :set_portfolio, only: [:update, :destroy]
+    before_action :authorize_access, only: [:update]
 
     def index
             @portfolios = current_user.portfolios

@@ -1,6 +1,6 @@
 FactoryBot.define do
   factory :portfolio do
-    stock_id { "mock_id" }
+    stock_symbol { "aaave" }
     quantity { 100000 }
     price { 1 }
     user { nil }

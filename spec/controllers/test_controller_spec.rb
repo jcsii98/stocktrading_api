@@ -14,11 +14,8 @@ RSpec.describe TestController, type: :controller do
         get :users_only
 
         expect(response).to have_http_status(:success)
-        
         response_json = JSON.parse(response.body)
-        
-        expect(response_json['data']['message']).to eq("Welcome #{user.full_name}")
-        expect(response_json['data']['user']['id']).to eq(user.id)
+        expect(response_json['data']['id']).to eq(user.id)
       end
     end
 

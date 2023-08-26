@@ -19,6 +19,8 @@ class PortfolioCreator
     @portfolio.price = matching_stock.usd
     @portfolio.quantity ||= 0
 
+    Rails.logger.debug("Price: #{@portfolio.price}, Quantity: #{@portfolio.quantity}")
+    
     total_amount = @portfolio.price * @portfolio.quantity
     @portfolio.total_amount = total_amount
 
