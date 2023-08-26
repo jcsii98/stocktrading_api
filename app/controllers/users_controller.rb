@@ -1,11 +1,16 @@
 class UsersController < ApplicationController
-  before_action :authenticate_user!
-
+  before_action :authenticate_user!, only: [:update]
+  before_action :authorize_access, only: [:show]
   def show 
-    user = current_user
-    render json: {
-      wallet_balance: user.wallet_balance,
-      pending_amount: user.pending_amount }
+    if current_admin
+      admin = current_admin
+      render json: admin
+    else
+      user = current_user
+      render json: current_user
+    end
+    # user = current_user
+    # render json: current_user
   end
   
   def update
@@ -23,7 +28,16 @@ class UsersController < ApplicationController
   end
 
   private
-
+  
+  def authorize_access
+    if current_admin
+      authenticate_admin!
+    else
+      authenticate_user!
+    end
+  rescue
+    render json: { status: 'error', message: 'You are not authorized to access this resource.' }, status: :forbidden
+  end
   def user_params
     params.require(:user).permit(:wallet_balance)
   end
