@@ -15,8 +15,26 @@ class Portfolio < ApplicationRecord
   end
   
   def update_portfolios_total_amount
+    self.price = self.price.to_f
+    self.quantity = self.quantity.to_f
     # Calculate total_amount based on the updated quantity and price
     self.total_amount = self.price * self.quantity
+    save!
+  end
+
+  def update_price_from_stock
+    stock = Stock.find_by(symbol: stock_symbol)
+
+    if stock
+      stock_usd_price = stock.usd.to_f
+      self.quantity = self.quantity.to_f
+      
+      new_amount = stock_usd_price * self.quantity
+      if stock_usd_price.positive?
+        update(price: stock_usd_price, total_amount: new_amount)
+        Rails.logger.debug("Portfolio price updated for stock symbol: #{stock_symbol}")
+      end
+    end
   end
   
   # on transaction.create

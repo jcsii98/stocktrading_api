@@ -11,7 +11,7 @@ class PortfolioCreator
     matching_stock = Stock.find_by(symbol: @portfolio_params[:stock_symbol])
 
     if matching_stock.nil?
-      @portfolio.errors.add(:base, 'Invalid stock_symbol')
+      @portfolio.errors.add(:base, 'Invalid symbol')
       return false
     end
 

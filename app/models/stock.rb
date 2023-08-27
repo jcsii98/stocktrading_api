@@ -1,5 +1,15 @@
 class Stock < ApplicationRecord
   has_many :portfolios
+
+  after_update :update_portfolios_price
+
+  def update_portfolios_price
+      portfolios.each do |portfolio|
+        portfolio.update_price_from_stock
+        Rails.logger.debug("Portfolio price updated for portfolio ID: #{portfolio.id}")
+      end
+  end
+
   def self.fetch_and_update_stock_data
     available_stocks = StocksService.new.fetch_available_stocks
     
