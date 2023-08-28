@@ -3,4 +3,9 @@ class StocksController < ApplicationController
         @stocks = Stock.all
         render json: { data: @stocks }
     end
+
+    def update_stocks
+        Stock.fetch_and_update_stock_data
+        render json: { message: 'Stock data updated' }
+    end
 end

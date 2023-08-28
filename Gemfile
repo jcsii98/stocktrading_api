@@ -6,6 +6,8 @@ ruby "3.2.2"
 gem 'sendgrid-ruby'
 gem 'mailtrap'
 
+gem 'delayed_job_active_record'
+
 # Bundle edge Rails instead: gem "rails", github: "rails/rails", branch: "main"
 gem "rails", "~> 7.0.6"
 
