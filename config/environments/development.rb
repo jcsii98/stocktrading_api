@@ -34,7 +34,7 @@ Rails.application.configure do
   config.active_storage.service = :local
 
   # Don't care if the mailer can't send.
-  config.action_mailer.raise_delivery_errors = true
+  config.action_mailer.raise_delivery_errors = false
 
   config.action_mailer.perform_caching = false
 
@@ -65,23 +65,20 @@ Rails.application.configure do
   # config.action_cable.disable_request_forgery_protection = true
 
   # devise setup
-  config.action_mailer.default_url_options = { host: 'http://localhost:3000' }
+  config.action_mailer.default_url_options = { host: 'localhost', port: 3000 }
   # mailcatcher config
   # config.action_mailer.delivery_method = :smtp
   # config.action_mailer.smtp_settings = { :address => '127.0.0.1', :port => 1025 }
-  # config.action_mailer.raise_delivery_errors = true
 
-  # gmail smtp config
+  # mailtrap
   config.action_mailer.delivery_method = :smtp
   config.action_mailer.smtp_settings = {
-    address:              'smtp.sendgrid.net',
-    port:                 587,
-    domain:               'sendgrid.com',
-    user_name:            'apikey',
-    password:             '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',
-    authentication:       'plain',
-    enable_starttls_auto: true,
-    open_timeout:         5,
-    read_timeout:         5 }
+    :user_name => '18aaa6f229d1bc',
+    :password => '503071f975dbde',
+    :address => 'sandbox.smtp.mailtrap.io',
+    :host => 'sandbox.smtp.mailtrap.io',
+    :port => '2525',
+    :authentication => :cram_md5
+  }
 
 end

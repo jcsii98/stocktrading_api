@@ -117,6 +117,7 @@ GEM
       net-imap
       net-pop
       net-smtp
+    mailtrap (1.2.1)
     marcel (1.0.2)
     method_source (1.0.0)
     mime-types (3.5.0)
@@ -241,6 +242,7 @@ DEPENDENCIES
   devise_token_auth
   factory_bot_rails
   faker
+  mailtrap
   puma (~> 5.0)
   rack-cors
   rails (~> 7.0.6)
