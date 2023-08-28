@@ -9,11 +9,6 @@ Bundler.require(*Rails.groups)
 module StocktradingApi
   class Application < Rails::Application
 
-    # config.after_initialize do
-    #   # Schedule the job immediately and every 5 minutes
-    #   Stock.schedule_fetch_and_update_stock_data
-    #   # You can also consider using an external service like 'whenever' to schedule the job periodically.
-    # end
     # Initialize configuration defaults for originally generated Rails version.
     config.load_defaults 7.0
 
@@ -43,6 +38,6 @@ module StocktradingApi
     # Skip views, helpers and assets when generating a new resource.
     config.api_only = true
 
-    config.active_job.queue_adapter = :delayed_job
+    
   end
 end
