@@ -65,7 +65,7 @@ Rails.application.configure do
   # config.action_cable.disable_request_forgery_protection = true
 
   # devise setup
-  config.action_mailer.default_url_options = { host: 'https://stocktrading-api.onrender.com' }
+  config.action_mailer.default_url_options = { host: 'http://localhost:3000' }
   # mailcatcher config
   # config.action_mailer.delivery_method = :smtp
   # config.action_mailer.smtp_settings = { :address => '127.0.0.1', :port => 1025 }
@@ -74,11 +74,11 @@ Rails.application.configure do
   # gmail smtp config
   config.action_mailer.delivery_method = :smtp
   config.action_mailer.smtp_settings = {
-    address:              'smtp.gmail.com',
+    address:              'smtp.sendgrid.net',
     port:                 587,
-    domain:               'https://stocktrading-api.onrender.com',
-    user_name:            'jose.c.saribong@gmail.com',
-    password:             'ktqjvzhfrofxtpds',
+    domain:               'sendgrid.com',
+    user_name:            'apikey',
+    password:             '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',
     authentication:       'plain',
     enable_starttls_auto: true,
     open_timeout:         5,
