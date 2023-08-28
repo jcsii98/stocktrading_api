@@ -24,7 +24,11 @@ Rails.application.routes.draw do
   # Defines the root path route ("/")
   # root "articles#index"
   get '/stocks', to: 'stocks#index'
-  
+  resources :stocks do
+    collection do
+      get :fetch_coin_data
+    end
+  end
   post '/update_stocks', to: 'stocks#update_stocks'
 
   get '/portfolios', to: 'portfolios#index'
