@@ -28,7 +28,8 @@ Rails.application.routes.draw do
   # test api call route
   resources :stocks do
     collection do
-      get :fetch_coin_data
+      get :test_rest
+      get :test_party
     end
   end
   post '/update_stocks', to: 'stocks#update_stocks'
