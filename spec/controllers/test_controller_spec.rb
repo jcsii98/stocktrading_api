@@ -4,13 +4,12 @@ RSpec.describe TestController, type: :controller do
   describe 'GET #users_only' do
     context 'when user is authenticated' do
       it 'returns a success response' do
-        user = create(:user)  # Assuming you have a User factory set up
+        user = create(:user) 
         
-        # Generate and set an authentication token for the user
+
         auth_headers = user.create_new_auth_token
         
-        request.headers.merge!(auth_headers)  # Set authentication headers
-        
+        request.headers.merge!(auth_headers)  
         get :users_only
 
         expect(response).to have_http_status(:success)
@@ -34,12 +33,11 @@ RSpec.describe TestController, type: :controller do
   describe 'GET #admins_only' do
     context 'when admin is authenticated' do
       it 'returns a success response' do
-        admin = create(:admin)  # Assuming you have a User factory set up
-        
-        # Generate and set an authentication token for the user
+        admin = create(:admin) 
+
         auth_headers = admin.create_new_auth_token
         
-        request.headers.merge!(auth_headers)  # Set authentication headers
+        request.headers.merge!(auth_headers)
         
         get :admins_only
 

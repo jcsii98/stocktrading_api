@@ -10,21 +10,23 @@ class StocksController < ApplicationController
     end
 
     # test api call
-#     def fetch_coin_data
-#     response = RestClient.get("https://api.coingecko.com/api/v3/coins/markets", 
-#                               params: {
-#                                 vs_currency: 'usd',
-#                                 category: 'aave-tokens',
-#                                 order: 'market_cap_desc',
-#                                 per_page: 100,
-#                                 page: 1,
-#                                 sparkline: false,
-#                                 locale: 'en'
-#                               })
+    
+    def fetch_coin_data
+    response = RestClient.get("https://api.coingecko.com/api/v3/coins/markets", 
+                              params: {
+                                vs_currency: 'usd',
+                                category: 'aave-tokens',
+                                order: 'market_cap_desc',
+                                per_page: 100,
+                                page: 1,
+                                sparkline: false,
+                                locale: 'en'
+                              })
 
-#     coin_data = JSON.parse(response.body)
-#     render json: { coin_data: coin_data }
-#   rescue RestClient::ExceptionWithResponse => e
-#     render json: { error: e.message }, status: e.response.code
-#   end
+    coin_data = JSON.parse(response.body)
+    render json: { coin_data: coin_data }
+  rescue RestClient::ExceptionWithResponse => e
+    render json: { error: e.message }, status: e.response.code
+  end
+
 end

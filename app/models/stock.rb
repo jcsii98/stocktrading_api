@@ -16,7 +16,7 @@ class Stock < ApplicationRecord
     available_stocks.each do |stock_data|
       symbol = stock_data[:symbol]
       name = stock_data[:name]
-      usd = stock_data[:usd]  # Use the 'current_price' field for USD
+      usd = stock_data[:usd]  # Use 'current_price' field for USD
       
       unless symbol.present?
         puts "Skipped stock with missing symbol"

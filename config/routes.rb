@@ -26,11 +26,11 @@ Rails.application.routes.draw do
   get '/stocks', to: 'stocks#index'
 
   # test api call route
-  # resources :stocks do
-  #   collection do
-  #     get :fetch_coin_data
-  #   end
-  # end
+  resources :stocks do
+    collection do
+      get :fetch_coin_data
+    end
+  end
   post '/update_stocks', to: 'stocks#update_stocks'
 
   get '/portfolios', to: 'portfolios#index'
