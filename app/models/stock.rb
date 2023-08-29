@@ -36,8 +36,5 @@ class Stock < ApplicationRecord
     end
   end
 
-  # def self.schedule_fetch_and_update_stock_data
-  #   StockWorker.delay(run_at: 5.minutes.from_now).perform_later
-  # end
 
 end

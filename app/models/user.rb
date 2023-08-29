@@ -19,10 +19,10 @@ class User < ActiveRecord::Base
 
   def can_cover_resulting_pending_amount(amount)
     resulting_pending_amount = pending_amount + amount
-    if resulting_pending_amount <= wallet_balance
+    if resulting_pending_amount <= self.wallet_balance
       { success: true, message: 'User can cover resulting pending amount'}
     else
-      insufficient_amount = resulting_pending_amount - wallet_balance
+      insufficient_amount = resulting_pending_amount - self.wallet_balance
       { success: false, message: "User cannot cover resulting pending amount. Please top up: #{insufficient_amount}" }
     end
   end

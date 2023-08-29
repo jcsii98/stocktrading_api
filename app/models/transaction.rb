@@ -24,13 +24,13 @@ class Transaction < ApplicationRecord
         stock_price = transaction_stock.usd
 
         transaction_quantity = quantity.to_f
-        amount = transaction_quantity * stock_price
+        amount = (transaction_quantity * stock_price).round(2)
 
         # Validation methods return error messages or nil if successful
         buyer_portfolio_check = validate_buyer_portfolio(user, transaction_stock)
         return buyer_portfolio_check if buyer_portfolio_check
 
-        cover_result = validate_covering_pending_amount(user, amount)
+        cover_result = validate_covering_pending_amount(user, amount.round(2))  # Round to 2 decimal places
         return cover_result if cover_result
 
         seller_portfolio_check = validate_seller_portfolio(seller_portfolio, transaction_quantity)
