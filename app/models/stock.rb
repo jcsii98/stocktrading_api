@@ -11,7 +11,10 @@ class Stock < ApplicationRecord
   end
 
   def self.fetch_and_update_stock_data
-    available_stocks = StocksService.new.fetch_available_stocks
+
+    stocks_service = StocksService.new
+    
+    available_stocks = stocks_service.fetch_available_stocks
     
     available_stocks.each do |stock_data|
       symbol = stock_data[:symbol]

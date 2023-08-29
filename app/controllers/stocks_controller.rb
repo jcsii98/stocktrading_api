@@ -35,10 +35,7 @@ class StocksController < ApplicationController
     end
 
     def test_party
-        BASE_URL = 'https://finnhub.io/api/v1'
-        API_KEY = 'cjmtue1r01qmdd9q6m40cjmtue1r01qmdd9q6m4g'
-
-        response = HTTParty.get("#{BASE_URL}/stock/symbol?exchange=US&token=#{API_KEY}")
+        response = HTTParty.get("https://finnhub.io/api/v1/stock/symbol?exchange=US&token=cjmtue1r01qmdd9q6m40cjmtue1r01qmdd9q6m4g")
 
         coin_data = JSON.parse(response.body)
         render json: { coin_data: coin_data }

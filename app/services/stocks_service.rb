@@ -1,12 +1,13 @@
 require 'httparty'
 
 class StocksService
-  BASE_URL = 'https://finnhub.io/api/v1'
-  API_KEY = 'cjmtue1r01qmdd9q6m40cjmtue1r01qmdd9q6m4g'
-
+  def initialize
+    @base_url = 'https://finnhub.io/api/v1'
+    @api_key = 'cjmtue1r01qmdd9q6m40cjmtue1r01qmdd9q6m4g' 
+  end
 
   def fetch_available_stocks
-    response = HTTParty.get("#{BASE_URL}/stock/symbol?exchange=US&token=#{API_KEY}")
+    response = HTTParty.get("#{@base_url}/stock/symbol?exchange=US&token=#{@api_key}")
 
     if response.success?
       stocks_data = JSON.parse(response.body)
@@ -25,7 +26,7 @@ class StocksService
   private
 
   def fetch_stock_price(symbol)
-    response = HTTParty.get("#{BASE_URL}/quote?symbol=#{symbol}&token=#{API_KEY}")
+    response = HTTParty.get("#{@base_url}/quote?symbol=#{symbol}&token=#{API_KEY}")
 
     if response.success?
       stock_price_data = JSON.parse(response.body)
