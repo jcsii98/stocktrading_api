@@ -24,7 +24,7 @@ Rails.application.routes.draw do
   # Defines the root path route ("/")
   # root "articles#index"
   get '/stocks', to: 'stocks#index'
-
+  patch '/stocks', to: 'stocks#update'
   # test api call route
   resources :stocks do
     collection do
