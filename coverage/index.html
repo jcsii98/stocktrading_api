@@ -14,7 +14,7 @@
       <img src="./assets/0.12.3/loading.gif" alt="loading"/>
     </div>
     <div id="wrapper" class="hide">
-      <div class="timestamp">Generated <abbr class="timeago" title="2023-08-28T22:53:13+08:00">2023-08-28T22:53:13+08:00</abbr></div>
+      <div class="timestamp">Generated <abbr class="timeago" title="2023-08-29T06:36:02+08:00">2023-08-29T06:36:02+08:00</abbr></div>
       <ul class="group_tabs"></ul>
 
       <div id="content">
@@ -161,7 +161,7 @@
           <tr class="t-file">
             <td class="strong t-file__name"><a href="#c611b387127c8cf168ec943ddb965d8ebf83fc12" class="src_link" title="app/models/stock.rb">app/models/stock.rb</a></td>
             <td class="yellow strong cell--number t-file__coverage">90.00 %</td>
-            <td class="cell--number">36</td>
+            <td class="cell--number">40</td>
             <td class="cell--number">20</td>
             <td class="cell--number">18</td>
             <td class="cell--number">2</td>
@@ -227,7 +227,7 @@
           <tr class="t-file">
             <td class="strong t-file__name"><a href="#7334b4f4b1ce38892e4b89ba0fa3d967fc897459" class="src_link" title="config/application.rb">config/application.rb</a></td>
             <td class="green strong cell--number t-file__coverage">100.00 %</td>
-            <td class="cell--number">40</td>
+            <td class="cell--number">43</td>
             <td class="cell--number">14</td>
             <td class="cell--number">14</td>
             <td class="cell--number">0</td>
@@ -249,9 +249,9 @@
           <tr class="t-file">
             <td class="strong t-file__name"><a href="#7e936044c8f9221e5eac4804ed45479da0920465" class="src_link" title="config/environment.rb">config/environment.rb</a></td>
             <td class="green strong cell--number t-file__coverage">100.00 %</td>
-            <td class="cell--number">16</td>
-            <td class="cell--number">3</td>
-            <td class="cell--number">3</td>
+            <td class="cell--number">6</td>
+            <td class="cell--number">2</td>
+            <td class="cell--number">2</td>
             <td class="cell--number">0</td>
             <td class="cell--number">1.00</td>
             
@@ -326,9 +326,9 @@
           <tr class="t-file">
             <td class="strong t-file__name"><a href="#98c01b18d201570165b0ba6f8b10e6b6690fd8e2" class="src_link" title="config/routes.rb">config/routes.rb</a></td>
             <td class="green strong cell--number t-file__coverage">100.00 %</td>
-            <td class="cell--number">45</td>
-            <td class="cell--number">21</td>
-            <td class="cell--number">21</td>
+            <td class="cell--number">53</td>
+            <td class="cell--number">22</td>
+            <td class="cell--number">22</td>
             <td class="cell--number">0</td>
             <td class="cell--number">1.00</td>
             
@@ -5252,6 +5252,50 @@
 
             
 
+            <code class="ruby">  # def self.schedule_fetch_and_update_stock_data</code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="never" data-hits="" data-linenumber="37">
+            
+            
+
+            
+
+            <code class="ruby">  #   StockWorker.delay(run_at: 5.minutes.from_now).perform_later</code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="never" data-hits="" data-linenumber="38">
+            
+            
+
+            
+
+            <code class="ruby">  # end</code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="never" data-hits="" data-linenumber="39">
+            
+            
+
+            
+
+            <code class="ruby"></code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="never" data-hits="" data-linenumber="40">
+            
+            
+
+            
+
             <code class="ruby">end</code>
           </li>
         </div>
@@ -8254,12 +8298,23 @@
 
             
 
+            <code class="ruby"></code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="never" data-hits="" data-linenumber="12">
+            
+            
+
+            
+
             <code class="ruby">    # Initialize configuration defaults for originally generated Rails version.</code>
           </li>
         </div>
       
         <div>
-          <li class="covered" data-hits="1" data-linenumber="12">
+          <li class="covered" data-hits="1" data-linenumber="13">
             <span class="hits">1</span>
             
 
@@ -8270,24 +8325,13 @@
         </div>
       
         <div>
-          <li class="never" data-hits="" data-linenumber="13">
+          <li class="never" data-hits="" data-linenumber="14">
             
             
 
             
 
             <code class="ruby"></code>
-          </li>
-        </div>
-      
-        <div>
-          <li class="covered" data-hits="1" data-linenumber="14">
-            <span class="hits">1</span>
-            
-
-            
-
-            <code class="ruby">    config.session_store :cookie_store, key: &#39;_interslice_session&#39;</code>
           </li>
         </div>
       
@@ -8298,7 +8342,7 @@
 
             
 
-            <code class="ruby">    config.middleware.use ActionDispatch::Cookies</code>
+            <code class="ruby">    config.session_store :cookie_store, key: &#39;_interslice_session&#39;</code>
           </li>
         </div>
       
@@ -8309,29 +8353,29 @@
 
             
 
+            <code class="ruby">    config.middleware.use ActionDispatch::Cookies</code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="covered" data-hits="1" data-linenumber="17">
+            <span class="hits">1</span>
+            
+
+            
+
             <code class="ruby">    config.middleware.use config.session_store, config.session_options</code>
           </li>
         </div>
       
         <div>
-          <li class="never" data-hits="" data-linenumber="17">
+          <li class="never" data-hits="" data-linenumber="18">
             
             
 
             
 
             <code class="ruby"></code>
-          </li>
-        </div>
-      
-        <div>
-          <li class="covered" data-hits="1" data-linenumber="18">
-            <span class="hits">1</span>
-            
-
-            
-
-            <code class="ruby">    config.middleware.use Rack::Cors do</code>
           </li>
         </div>
       
@@ -8342,7 +8386,7 @@
 
             
 
-            <code class="ruby">      allow do</code>
+            <code class="ruby">    config.middleware.use Rack::Cors do</code>
           </li>
         </div>
       
@@ -8353,7 +8397,7 @@
 
             
 
-            <code class="ruby">        origins &#39;*&#39;</code>
+            <code class="ruby">      allow do</code>
           </li>
         </div>
       
@@ -8364,18 +8408,18 @@
 
             
 
-            <code class="ruby">        resource &#39;*&#39;,</code>
+            <code class="ruby">        origins &#39;*&#39;</code>
           </li>
         </div>
       
         <div>
-          <li class="never" data-hits="" data-linenumber="22">
-            
-            
-
+          <li class="covered" data-hits="1" data-linenumber="22">
+            <span class="hits">1</span>
             
 
-            <code class="ruby">          headers: :any,</code>
+            
+
+            <code class="ruby">        resource &#39;*&#39;,</code>
           </li>
         </div>
       
@@ -8386,7 +8430,7 @@
 
             
 
-            <code class="ruby">          expose: [&#39;access-token&#39;, &#39;expiry&#39;, &#39;token-type&#39;, &#39;uid&#39;, &#39;client&#39;],</code>
+            <code class="ruby">          headers: :any,</code>
           </li>
         </div>
       
@@ -8397,7 +8441,7 @@
 
             
 
-            <code class="ruby">          methods: [:get, :post, :options, :delete, :put, :patch]</code>
+            <code class="ruby">          expose: [&#39;access-token&#39;, &#39;expiry&#39;, &#39;token-type&#39;, &#39;uid&#39;, &#39;client&#39;],</code>
           </li>
         </div>
       
@@ -8408,7 +8452,7 @@
 
             
 
-            <code class="ruby">      end</code>
+            <code class="ruby">          methods: [:get, :post, :options, :delete, :put, :patch]</code>
           </li>
         </div>
       
@@ -8419,7 +8463,7 @@
 
             
 
-            <code class="ruby">    end</code>
+            <code class="ruby">      end</code>
           </li>
         </div>
       
@@ -8430,7 +8474,7 @@
 
             
 
-            <code class="ruby">    # Configuration for the application, engines, and railties goes here.</code>
+            <code class="ruby">    end</code>
           </li>
         </div>
       
@@ -8441,7 +8485,7 @@
 
             
 
-            <code class="ruby">    #</code>
+            <code class="ruby">    # Configuration for the application, engines, and railties goes here.</code>
           </li>
         </div>
       
@@ -8452,7 +8496,7 @@
 
             
 
-            <code class="ruby">    # These settings can be overridden in specific environments using the files</code>
+            <code class="ruby">    #</code>
           </li>
         </div>
       
@@ -8463,7 +8507,7 @@
 
             
 
-            <code class="ruby">    # in config/environments, which are processed later.</code>
+            <code class="ruby">    # These settings can be overridden in specific environments using the files</code>
           </li>
         </div>
       
@@ -8474,7 +8518,7 @@
 
             
 
-            <code class="ruby">    #</code>
+            <code class="ruby">    # in config/environments, which are processed later.</code>
           </li>
         </div>
       
@@ -8485,7 +8529,7 @@
 
             
 
-            <code class="ruby">    # config.time_zone = &quot;Central Time (US &amp; Canada)&quot;</code>
+            <code class="ruby">    #</code>
           </li>
         </div>
       
@@ -8496,7 +8540,7 @@
 
             
 
-            <code class="ruby">    # config.eager_load_paths &lt;&lt; Rails.root.join(&quot;extras&quot;)</code>
+            <code class="ruby">    # config.time_zone = &quot;Central Time (US &amp; Canada)&quot;</code>
           </li>
         </div>
       
@@ -8507,7 +8551,7 @@
 
             
 
-            <code class="ruby"></code>
+            <code class="ruby">    # config.eager_load_paths &lt;&lt; Rails.root.join(&quot;extras&quot;)</code>
           </li>
         </div>
       
@@ -8518,7 +8562,7 @@
 
             
 
-            <code class="ruby">    # Only loads a smaller set of middleware suitable for API only apps.</code>
+            <code class="ruby"></code>
           </li>
         </div>
       
@@ -8529,7 +8573,7 @@
 
             
 
-            <code class="ruby">    # Middleware like session, flash, cookies can be added back manually.</code>
+            <code class="ruby">    # Only loads a smaller set of middleware suitable for API only apps.</code>
           </li>
         </div>
       
@@ -8540,12 +8584,23 @@
 
             
 
+            <code class="ruby">    # Middleware like session, flash, cookies can be added back manually.</code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="never" data-hits="" data-linenumber="38">
+            
+            
+
+            
+
             <code class="ruby">    # Skip views, helpers and assets when generating a new resource.</code>
           </li>
         </div>
       
         <div>
-          <li class="covered" data-hits="1" data-linenumber="38">
+          <li class="covered" data-hits="1" data-linenumber="39">
             <span class="hits">1</span>
             
 
@@ -8556,7 +8611,29 @@
         </div>
       
         <div>
-          <li class="never" data-hits="" data-linenumber="39">
+          <li class="never" data-hits="" data-linenumber="40">
+            
+            
+
+            
+
+            <code class="ruby"></code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="never" data-hits="" data-linenumber="41">
+            
+            
+
+            
+
+            <code class="ruby">    </code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="never" data-hits="" data-linenumber="42">
             
             
 
@@ -8567,7 +8644,7 @@
         </div>
       
         <div>
-          <li class="never" data-hits="" data-linenumber="40">
+          <li class="never" data-hits="" data-linenumber="43">
             
             
 
@@ -8671,8 +8748,8 @@
     
 
     <div class="t-line-summary">
-      <b>3</b> relevant lines.
-      <span class="green"><b>3</b> lines covered</span> and
+      <b>2</b> relevant lines.
+      <span class="green"><b>2</b> lines covered</span> and
       <span class="red"><b>0</b> lines missed.</span>
     </div>
 
@@ -8746,116 +8823,6 @@
             
 
             <code class="ruby"></code>
-          </li>
-        </div>
-      
-        <div>
-          <li class="never" data-hits="" data-linenumber="7">
-            
-            
-
-            
-
-            <code class="ruby"></code>
-          </li>
-        </div>
-      
-        <div>
-          <li class="covered" data-hits="1" data-linenumber="8">
-            <span class="hits">1</span>
-            
-
-            
-
-            <code class="ruby">ActionMailer::Base.smtp_settings = {</code>
-          </li>
-        </div>
-      
-        <div>
-          <li class="never" data-hits="" data-linenumber="9">
-            
-            
-
-            
-
-            <code class="ruby">  :user_name =&gt; &#39;apikey&#39;, # This is the string literal &#39;apikey&#39;, NOT the ID of your API key</code>
-          </li>
-        </div>
-      
-        <div>
-          <li class="never" data-hits="" data-linenumber="10">
-            
-            
-
-            
-
-            <code class="ruby">  :password =&gt; &#39;&lt;SENDGRID_API_KEY&gt;&#39;, # This is the secret sendgrid API key which was issued during API key creation</code>
-          </li>
-        </div>
-      
-        <div>
-          <li class="never" data-hits="" data-linenumber="11">
-            
-            
-
-            
-
-            <code class="ruby">  :domain =&gt; &#39;yourdomain.com&#39;,</code>
-          </li>
-        </div>
-      
-        <div>
-          <li class="never" data-hits="" data-linenumber="12">
-            
-            
-
-            
-
-            <code class="ruby">  :address =&gt; &#39;smtp.sendgrid.net&#39;,</code>
-          </li>
-        </div>
-      
-        <div>
-          <li class="never" data-hits="" data-linenumber="13">
-            
-            
-
-            
-
-            <code class="ruby">  :port =&gt; 587,</code>
-          </li>
-        </div>
-      
-        <div>
-          <li class="never" data-hits="" data-linenumber="14">
-            
-            
-
-            
-
-            <code class="ruby">  :authentication =&gt; :plain,</code>
-          </li>
-        </div>
-      
-        <div>
-          <li class="never" data-hits="" data-linenumber="15">
-            
-            
-
-            
-
-            <code class="ruby">  :enable_starttls_auto =&gt; true</code>
-          </li>
-        </div>
-      
-        <div>
-          <li class="never" data-hits="" data-linenumber="16">
-            
-            
-
-            
-
-            <code class="ruby">}</code>
           </li>
         </div>
       
@@ -10169,7 +10136,7 @@
 
             
 
-            <code class="ruby">  config.mailer_sender = &quot;jose@stocktrading.com&quot;</code>
+            <code class="ruby">  config.mailer_sender = &quot;hello@stocktrading.com&quot;</code>
           </li>
         </div>
       
@@ -14443,8 +14410,8 @@
     
 
     <div class="t-line-summary">
-      <b>21</b> relevant lines.
-      <span class="green"><b>21</b> lines covered</span> and
+      <b>22</b> relevant lines.
+      <span class="green"><b>22</b> lines covered</span> and
       <span class="red"><b>0</b> lines missed.</span>
     </div>
 
@@ -14753,13 +14720,13 @@
         </div>
       
         <div>
-          <li class="covered" data-hits="1" data-linenumber="28">
-            <span class="hits">1</span>
+          <li class="never" data-hits="" data-linenumber="28">
+            
             
 
             
 
-            <code class="ruby">  get &#39;/portfolios&#39;, to: &#39;portfolios#index&#39;</code>
+            <code class="ruby">  # test api call route</code>
           </li>
         </div>
       
@@ -14770,18 +14737,18 @@
 
             
 
-            <code class="ruby">  </code>
+            <code class="ruby">  # resources :stocks do</code>
           </li>
         </div>
       
         <div>
-          <li class="covered" data-hits="1" data-linenumber="30">
-            <span class="hits">1</span>
+          <li class="never" data-hits="" data-linenumber="30">
+            
             
 
             
 
-            <code class="ruby">  post &#39;/portfolios&#39;, to: &#39;portfolios#create&#39;</code>
+            <code class="ruby">  #   collection do</code>
           </li>
         </div>
       
@@ -14792,18 +14759,18 @@
 
             
 
-            <code class="ruby"></code>
+            <code class="ruby">  #     get :fetch_coin_data</code>
           </li>
         </div>
       
         <div>
-          <li class="covered" data-hits="1" data-linenumber="32">
-            <span class="hits">1</span>
+          <li class="never" data-hits="" data-linenumber="32">
+            
             
 
             
 
-            <code class="ruby">  patch &#39;/portfolios/:id&#39;, to: &#39;portfolios#update&#39;</code>
+            <code class="ruby">  #   end</code>
           </li>
         </div>
       
@@ -14814,7 +14781,7 @@
 
             
 
-            <code class="ruby"></code>
+            <code class="ruby">  # end</code>
           </li>
         </div>
       
@@ -14825,7 +14792,7 @@
 
             
 
-            <code class="ruby">  delete &#39;portfolios/:id&#39;, to: &#39;portfolios#destroy&#39;</code>
+            <code class="ruby">  post &#39;/update_stocks&#39;, to: &#39;stocks#update_stocks&#39;</code>
           </li>
         </div>
       
@@ -14847,18 +14814,18 @@
 
             
 
-            <code class="ruby">  resources :portfolios do</code>
+            <code class="ruby">  get &#39;/portfolios&#39;, to: &#39;portfolios#index&#39;</code>
           </li>
         </div>
       
         <div>
-          <li class="covered" data-hits="1" data-linenumber="37">
-            <span class="hits">1</span>
+          <li class="never" data-hits="" data-linenumber="37">
+            
             
 
             
 
-            <code class="ruby">    collection do</code>
+            <code class="ruby">  </code>
           </li>
         </div>
       
@@ -14869,67 +14836,12 @@
 
             
 
-            <code class="ruby">      get :index_by_stock_symbol</code>
+            <code class="ruby">  post &#39;/portfolios&#39;, to: &#39;portfolios#create&#39;</code>
           </li>
         </div>
       
         <div>
-          <li class="covered" data-hits="1" data-linenumber="39">
-            <span class="hits">1</span>
-            
-
-            
-
-            <code class="ruby">      get :index_by_user</code>
-          </li>
-        </div>
-      
-        <div>
-          <li class="never" data-hits="" data-linenumber="40">
-            
-            
-
-            
-
-            <code class="ruby">    end</code>
-          </li>
-        </div>
-      
-        <div>
-          <li class="covered" data-hits="1" data-linenumber="41">
-            <span class="hits">1</span>
-            
-
-            
-
-            <code class="ruby">    resources :transactions, except: [:delete] do</code>
-          </li>
-        </div>
-      
-        <div>
-          <li class="never" data-hits="" data-linenumber="42">
-            
-            
-
-            
-
-            <code class="ruby">    end</code>
-          </li>
-        </div>
-      
-        <div>
-          <li class="never" data-hits="" data-linenumber="43">
-            
-            
-
-            
-
-            <code class="ruby">  end</code>
-          </li>
-        </div>
-      
-        <div>
-          <li class="never" data-hits="" data-linenumber="44">
+          <li class="never" data-hits="" data-linenumber="39">
             
             
 
@@ -14940,7 +14852,150 @@
         </div>
       
         <div>
-          <li class="never" data-hits="" data-linenumber="45">
+          <li class="covered" data-hits="1" data-linenumber="40">
+            <span class="hits">1</span>
+            
+
+            
+
+            <code class="ruby">  patch &#39;/portfolios/:id&#39;, to: &#39;portfolios#update&#39;</code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="never" data-hits="" data-linenumber="41">
+            
+            
+
+            
+
+            <code class="ruby"></code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="covered" data-hits="1" data-linenumber="42">
+            <span class="hits">1</span>
+            
+
+            
+
+            <code class="ruby">  delete &#39;portfolios/:id&#39;, to: &#39;portfolios#destroy&#39;</code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="never" data-hits="" data-linenumber="43">
+            
+            
+
+            
+
+            <code class="ruby"></code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="covered" data-hits="1" data-linenumber="44">
+            <span class="hits">1</span>
+            
+
+            
+
+            <code class="ruby">  resources :portfolios do</code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="covered" data-hits="1" data-linenumber="45">
+            <span class="hits">1</span>
+            
+
+            
+
+            <code class="ruby">    collection do</code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="covered" data-hits="1" data-linenumber="46">
+            <span class="hits">1</span>
+            
+
+            
+
+            <code class="ruby">      get :index_by_stock_symbol</code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="covered" data-hits="1" data-linenumber="47">
+            <span class="hits">1</span>
+            
+
+            
+
+            <code class="ruby">      get :index_by_user</code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="never" data-hits="" data-linenumber="48">
+            
+            
+
+            
+
+            <code class="ruby">    end</code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="covered" data-hits="1" data-linenumber="49">
+            <span class="hits">1</span>
+            
+
+            
+
+            <code class="ruby">    resources :transactions, except: [:delete] do</code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="never" data-hits="" data-linenumber="50">
+            
+            
+
+            
+
+            <code class="ruby">    end</code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="never" data-hits="" data-linenumber="51">
+            
+            
+
+            
+
+            <code class="ruby">  end</code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="never" data-hits="" data-linenumber="52">
+            
+            
+
+            
+
+            <code class="ruby"></code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="never" data-hits="" data-linenumber="53">
             
             
 
@@ -16240,7 +16295,7 @@
 
             
 
-            <code class="ruby">      expect(response_json[&#39;errors&#39;]).to include(&quot;Invalid stock_symbol&quot;)</code>
+            <code class="ruby">      expect(response_json[&#39;errors&#39;]).to include(&quot;Invalid symbol&quot;)</code>
           </li>
         </div>
       

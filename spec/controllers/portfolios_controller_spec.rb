@@ -59,7 +59,7 @@ RSpec.describe PortfoliosController, type: :controller do
 
       response_json = JSON.parse(response.body)
       expect(response_json['status']).to eq('error')
-      expect(response_json['errors']).to include("Invalid stock_symbol")
+      expect(response_json['errors']).to include("Invalid symbol")
     end
   end
 
