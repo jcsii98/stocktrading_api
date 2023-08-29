@@ -9,9 +9,9 @@ class StocksController < ApplicationController
         render json: { message: 'Stock data updated' }
     end
 
-
+    # bomy url "https://api.coingecko.com/api/v3/coins/markets?vs_currency=php&order=market_cap_desc&per_page=250&page=1&sparkline=false&locale=en"
     def test_rest
-        response = RestClient.get("https://api.coingecko.com/api/v3/coins/markets?vs_currency=php&order=market_cap_desc&per_page=250&page=1&sparkline=false&locale=en", 
+        response = RestClient.get("https://finnhub.io/api/v1/stock/symbol?exchange=US", 
         # response = RestClient.get("https://api.coingecko.com/api/v3/coins/markets", 
                                 # params: {
                                 #     vs_currency: 'usd',
@@ -35,12 +35,8 @@ class StocksController < ApplicationController
     end
 
     def test_party
-        response = HTTParty.get("https://api.coingecko.com/api/v3/coins/markets?vs_currency=php&order=market_cap_desc&per_page=250&page=1&sparkline=false&locale=en", 
-        # response = HTTParty.get("https://api.coingecko.com/api/v3/coins/markets", 
-                                
-                                # headers: {
-                                #     'User-Agent' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/116.0.0.0 Safari/537.36'
-                                # }
+        response = HTTParty.get("https://finnhub.io/api/v1/stock/symbol?exchange=US", 
+
         )
 
         coin_data = JSON.parse(response.body)
