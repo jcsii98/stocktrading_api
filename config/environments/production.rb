@@ -55,17 +55,17 @@ Rails.application.configure do
   config.action_mailer.default_url_options = { host: 'https://stocktrading-api.onrender.com' }
 
 
-  # mailtrap config
-
   config.action_mailer.delivery_method = :smtp
   config.action_mailer.smtp_settings = {
-    :user_name => '18aaa6f229d1bc',
-    :password => '503071f975dbde',
-    :address => 'sandbox.smtp.mailtrap.io',
-    :host => 'sandbox.smtp.mailtrap.io',
-    :port => '2525',
-    :authentication => :cram_md5
-  }
+    address:              'smtp.gmail.com',
+    port:                 587,
+    domain:               'example.com',
+    user_name:            ENV['GMAIL_USERNAME'],
+    password:             ENV["GMAIL_PASSWORD"],
+    authentication:       'plain',
+    enable_starttls_auto: true,
+    open_timeout:         5,
+    read_timeout:         5 }
 
 
   # Use a real queuing backend for Active Job (and separate queues per environment).
